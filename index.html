@@ -1,0 +1,2850 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EA 고객사 방문교육 — BlueTNS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+  :root {
+    --primary: #1E2A3A;
+    --primary-2: #2C3E50;
+    --secondary: #4A6FA5;
+    --accent: #FF6B35;
+    --accent-soft: #FFE4D6;
+    --success: #00A86B;
+    --warning: #FFC107;
+    --warning-soft: #FFF7DD;
+    --danger: #DC3545;
+    --bg: #FFFFFF;
+    --bg-soft: #F5F7FA;
+    --bg-warm: #F4EFE7;
+    --text: #2C3E50;
+    --muted: #6C757D;
+    --line: #E5E9EF;
+    /* course identities */
+    --course-a: #E8A87C;
+    --course-a-accent: #FF6B35;
+    --course-b: #4A6FA5;
+    --course-b-accent: #1E2A3A;
+    --course-c: #2C3E50;
+    --course-c-accent: #D4AF37;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; font-family:'Pretendard', system-ui, sans-serif; color:var(--text); background:var(--bg); }
+  body { -webkit-font-smoothing:antialiased; }
+  a { color:inherit; text-decoration:none; }
+  button { font-family:inherit; cursor:pointer; border:none; background:none; }
+  .mono { font-family:'D2Coding','JetBrains Mono','Consolas',monospace; }
+
+  /* views */
+  .view { display:none; min-height:100vh; }
+  .view.active { display:block; }
+
+  /* ===== Top bar (hub + detail shared) ===== */
+  .topbar { position:sticky; top:0; z-index:50; background:rgba(255,255,255,0.92); backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .topbar-inner { max-width:1280px; margin:0 auto; padding:18px 32px; display:flex; align-items:center; justify-content:space-between; }
+  .logo { display:flex; align-items:center; gap:12px; cursor:pointer; }
+  .logo img { height:34px; width:auto; display:block; }
+  .logo .divider { width:1px; height:22px; background:var(--line); }
+  .logo .sub { font-size:13px; color:var(--muted); font-weight:600; letter-spacing:0.02em; }
+  .topnav { display:flex; gap:32px; align-items:center; font-size:14px; color:var(--muted); }
+  .topnav a:hover { color:var(--accent); }
+  .topnav .cta-mini { padding:8px 18px; border-radius:99px; background:var(--primary); color:#fff; font-weight:600; }
+
+  /* ===== HUB — Hero ===== */
+  .hero {
+    background:#0f1620;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before {
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at 75% 50%, #000 25%, transparent 75%);
+  }
+  .hero-inner { max-width:1280px; margin:0 auto; padding:120px 32px 140px; display:grid; grid-template-columns:1.3fr 1fr; gap:64px; align-items:center; position:relative; }
+  .hero-eyebrow { color:var(--accent); font-size:14px; letter-spacing:0.2em; font-weight:700; text-transform:uppercase; }
+  .hero h1 { font-size:80px; line-height:1.05; letter-spacing:-0.03em; margin:24px 0 0; font-weight:800; color:#FFFFFF; text-shadow:0 0 32px rgba(255,255,255,0.18); }
+  .hero h1 .hl { color:var(--accent); text-shadow:0 0 28px rgba(255,107,53,0.35); }
+  .hero p.lead { font-size:22px; color:rgba(255,255,255,0.8); margin-top:32px; line-height:1.55; max-width:600px; }
+  .hero-cta { display:inline-flex; align-items:center; gap:12px; padding:18px 32px; background:var(--accent); color:#fff; border-radius:12px; font-weight:700; font-size:18px; margin-top:40px; transition:transform 0.2s; }
+  .hero-cta:hover { transform:translateY(-2px); }
+  .hero-blueprint { position:relative; }
+  .hero-blueprint svg { width:100%; height:auto; opacity:0.6; }
+  .scroll-indicator { position:absolute; bottom:40px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.5); font-size:13px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .scroll-indicator .arrow { width:1px; height:32px; background:linear-gradient(to bottom, transparent, rgba(255,255,255,0.5)); animation:scroll 2s infinite; }
+  @keyframes scroll { 0%{opacity:0; transform:translateY(-10px);} 50%{opacity:1;} 100%{opacity:0; transform:translateY(10px);} }
+
+  /* ===== Why BlueTNS ===== */
+  .section { max-width:1280px; margin:0 auto; padding:120px 32px; }
+  .section-eyebrow { color:var(--accent); font-size:13px; letter-spacing:0.2em; font-weight:700; text-transform:uppercase; }
+  .section h2 { font-size:48px; line-height:1.2; letter-spacing:-0.02em; margin:14px 0 0; font-weight:800; color:var(--primary); }
+  .section .sub { font-size:18px; color:var(--muted); margin-top:14px; max-width:700px; line-height:1.55; }
+  .why-grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:20px; margin-top:64px; }
+  .why-card { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:36px 28px; transition:0.2s; }
+  .why-card:hover { transform:translateY(-6px); border-color:var(--accent); box-shadow:0 20px 40px -20px rgba(255,107,53,0.25); }
+  .why-icon { width:56px; height:56px; border-radius:14px; background:var(--bg-soft); display:flex; align-items:center; justify-content:center; font-size:26px; margin-bottom:20px; }
+  .why-card h3 { font-size:20px; margin:0 0 10px; color:var(--primary); font-weight:700; }
+  .why-card p { font-size:15px; color:var(--muted); line-height:1.55; margin:0; }
+
+  /* ===== Course cards ===== */
+  .courses-section { background:var(--bg-soft); }
+  .courses-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:64px; }
+  .course-card { background:#fff; border-radius:24px; overflow:hidden; position:relative; transition:0.25s; cursor:pointer; border:1.5px solid var(--line); display:flex; flex-direction:column; }
+  .course-card:hover { transform:translateY(-8px); box-shadow:0 24px 48px -20px rgba(30,42,58,0.25); }
+  .course-card.coming { opacity:0.7; }
+  .course-card.coming:hover { opacity:0.9; }
+  .course-tag { position:absolute; top:24px; right:24px; padding:6px 14px; border-radius:99px; font-size:12px; font-weight:700; letter-spacing:0.05em; z-index:2; }
+  .course-tag.popular { background:var(--accent); color:#fff; }
+  .course-tag.recommend { background:var(--primary); color:#fff; }
+  .course-tag.org { background:#D4AF37; color:#fff; }
+  .course-tag.coming { background:#fff; color:var(--muted); border:1px solid var(--line); }
+  .course-banner { padding:48px 36px 36px; text-align:left; }
+  .course-banner.a { background:linear-gradient(160deg, #F4EFE7, #E8A87C); }
+  .course-banner.b { background:linear-gradient(160deg, #E8EFF7, #4A6FA5); color:#fff; }
+  .course-banner.b h3, .course-banner.b .course-time { color:#fff; }
+  .course-banner.c { background:linear-gradient(160deg, #2C3E50, #1E2A3A); color:#fff; }
+  .course-banner.c h3, .course-banner.c .course-time { color:#fff; }
+  .course-emoji { font-size:56px; line-height:1; margin-bottom:20px; }
+  .course-banner h3 { font-size:32px; font-weight:800; color:var(--primary); margin:0 0 8px; letter-spacing:-0.02em; }
+  .course-time { font-size:18px; font-weight:600; color:var(--primary); }
+  .course-time .small { font-size:13px; font-weight:500; opacity:0.7; margin-left:8px; }
+  .course-body { padding:32px 36px; flex:1; display:flex; flex-direction:column; }
+  .course-target { font-size:14px; color:var(--muted); margin-bottom:18px; letter-spacing:0.04em; }
+  .course-features { list-style:none; padding:0; margin:0 0 28px; flex:1; }
+  .course-features li { display:flex; gap:10px; align-items:flex-start; padding:8px 0; font-size:15px; color:var(--text); }
+  .course-features li .ck { color:var(--success); font-weight:800; flex-shrink:0; }
+  .course-cta { width:100%; padding:16px 24px; border-radius:12px; font-weight:700; font-size:16px; transition:0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .course-cta.primary { background:var(--accent); color:#fff; }
+  .course-cta.primary:hover { background:#e85a25; }
+  .course-cta.disabled { background:var(--bg-soft); color:var(--muted); cursor:not-allowed; border:1px solid var(--line); }
+
+  /* ===== Comparison table ===== */
+  .compare-section { background:#fff; }
+  .compare-table { margin-top:56px; border:1px solid var(--line); border-radius:18px; overflow:hidden; }
+  .compare-table table { width:100%; border-collapse:collapse; }
+  .compare-table th, .compare-table td { padding:18px 20px; text-align:center; border-bottom:1px solid var(--line); font-size:15px; }
+  .compare-table th { background:var(--bg-soft); font-weight:700; color:var(--primary); font-size:14px; }
+  .compare-table th.row-label, .compare-table td.row-label { text-align:left; font-weight:600; color:var(--text); background:#fafbfd; }
+  .compare-table tr:last-child td, .compare-table tr:last-child th { border-bottom:none; }
+  .compare-table .col-a { background:rgba(255,107,53,0.04); }
+  .compare-table th.col-a { background:rgba(255,107,53,0.1); }
+  .compare-table .check { color:var(--success); font-weight:800; }
+  .compare-table .dash { color:var(--line); }
+  .compare-table .status-active { color:var(--success); font-weight:700; }
+  .compare-table .status-coming { color:var(--warning); font-weight:600; }
+  .compare-cta { margin-top:32px; background:var(--bg-soft); border-radius:18px; padding:32px 40px; display:flex; align-items:center; justify-content:space-between; gap:24px; }
+  .compare-cta .l h4 { font-size:22px; margin:0 0 6px; color:var(--primary); }
+  .compare-cta .l p { font-size:15px; color:var(--muted); margin:0; }
+  .btn-secondary { padding:14px 24px; border-radius:10px; background:var(--primary); color:#fff; font-weight:700; font-size:15px; transition:0.2s; }
+  .btn-secondary:hover { background:var(--accent); }
+
+  /* ===== Footer ===== */
+  .footer { background:#0f1620; color:#fff; padding:80px 32px 40px; }
+  .footer-inner { max-width:1280px; margin:0 auto; display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:48px; }
+  .footer .logo .divider { background:rgba(255,255,255,0.18); }
+  .footer .logo .sub { color:rgba(255,255,255,0.7); }
+  .footer-tag { color:rgba(255,255,255,0.6); font-size:14px; margin-top:14px; line-height:1.6; }
+  .footer-quote { font-style:italic; color:var(--accent); margin-top:20px; font-size:16px; }
+  .footer h5 { font-size:13px; color:rgba(255,255,255,0.5); letter-spacing:0.14em; text-transform:uppercase; margin:0 0 18px; font-weight:700; }
+  .footer-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:10px; }
+  .footer-list a { color:rgba(255,255,255,0.85); font-size:14px; }
+  .footer-list a:hover { color:var(--accent); }
+  .footer-bottom { max-width:1280px; margin:60px auto 0; padding-top:24px; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; color:rgba(255,255,255,0.4); font-size:13px; }
+
+  /* ===== Course A detail page ===== */
+  .detail-hero { background:linear-gradient(160deg, #F4EFE7 0%, #E8A87C 100%); padding:80px 32px 80px; }
+  .detail-hero-inner { max-width:1280px; margin:0 auto; }
+  .back-link { display:inline-flex; align-items:center; gap:8px; color:var(--primary); font-size:14px; font-weight:600; margin-bottom:36px; padding:8px 16px; border-radius:99px; background:rgba(255,255,255,0.7); transition:0.2s; }
+  .back-link:hover { background:#fff; }
+  .detail-emoji { font-size:72px; line-height:1; }
+  .detail-hero h1 { font-size:64px; font-weight:800; letter-spacing:-0.025em; color:var(--primary); margin:24px 0 16px; line-height:1.1; }
+  .detail-hero .formula { font-size:24px; color:var(--primary-2); font-weight:500; }
+  .detail-hero .formula b { font-weight:800; color:var(--accent); }
+
+  /* Course B detail hero (dark) */
+  .detail-hero-b { background:linear-gradient(160deg, #1E2A3A 0%, #4A6FA5 100%); position:relative; overflow:hidden; }
+  .detail-hero-b::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 80% 20%, rgba(255,107,53,0.15), transparent 60%), radial-gradient(ellipse at 10% 80%, rgba(74,111,165,0.4), transparent 50%); pointer-events:none; }
+  .detail-hero-b .detail-hero-inner { position:relative; z-index:1; }
+  .detail-meta-dark .item { color:#fff; }
+  .detail-meta-dark .item .lbl { color:rgba(255,255,255,0.55); opacity:1; }
+  .detail-meta-dark .item .val { color:#fff; }
+
+  .detail-meta { display:flex; gap:48px; margin-top:48px; flex-wrap:wrap; }
+  .detail-meta .item { color:var(--primary); }
+  .detail-meta .item .lbl { font-size:12px; letter-spacing:0.14em; text-transform:uppercase; opacity:0.6; font-weight:700; }
+  .detail-meta .item .val { font-size:22px; font-weight:700; margin-top:4px; }
+
+  /* learning goals */
+  .goals-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:56px; }
+  .goal-card { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:36px; position:relative; transition:0.2s; }
+  .goal-card:hover { border-color:var(--accent); }
+  .goal-num { font-family:'D2Coding','JetBrains Mono',monospace; color:var(--accent); font-size:14px; letter-spacing:0.18em; font-weight:800; }
+  .goal-card h3 { font-size:22px; margin:14px 0 10px; color:var(--primary); font-weight:700; line-height:1.35; }
+  .goal-card p { font-size:15px; color:var(--muted); line-height:1.6; margin:0; }
+
+  /* persona */
+  .persona-section { background:var(--bg-soft); }
+  .persona-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; margin-top:56px; }
+  .persona-card { background:#fff; border-radius:18px; padding:36px; border:1.5px solid var(--line); }
+  .persona-emoji { font-size:48px; margin-bottom:16px; }
+  .persona-card h4 { font-size:22px; margin:0 0 12px; color:var(--primary); font-weight:700; }
+  .persona-card .who { font-size:16px; color:var(--text); font-weight:600; margin-bottom:8px; line-height:1.5; }
+  .persona-card .why { font-size:14px; color:var(--muted); line-height:1.55; }
+
+  /* timeline */
+  .timeline-viz { margin-top:56px; background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:48px 40px; }
+  .timeline-bar { display:grid; grid-template-columns:30fr 5fr 30fr; gap:8px; height:80px; border-radius:12px; overflow:hidden; }
+  .tl-seg { padding:18px 24px; display:flex; flex-direction:column; justify-content:center; color:#fff; }
+  .tl-seg.p1 { background:linear-gradient(135deg, #1E2A3A, #2C3E50); }
+  .tl-seg.brk { background:#E8A87C; color:#1E2A3A; align-items:center; justify-content:center; text-align:center; }
+  .tl-seg.p2 { background:linear-gradient(135deg, #FF6B35, #e85a25); }
+  .tl-seg .lbl { font-family:'D2Coding','JetBrains Mono',monospace; font-size:11px; letter-spacing:0.14em; opacity:0.85; }
+  .tl-seg .ttl { font-size:18px; font-weight:700; margin-top:4px; }
+  .tl-seg.brk .ttl { font-size:24px; }
+  .timeline-axis { display:grid; grid-template-columns:30fr 5fr 30fr; gap:8px; margin-top:14px; font-family:'D2Coding','JetBrains Mono',monospace; font-size:13px; color:var(--muted); }
+  .timeline-axis div { display:flex; justify-content:space-between; }
+
+  /* curriculum */
+  .curr-section { background:#fff; }
+  .curr-list { margin-top:48px; }
+  .curr-group { margin-bottom:32px; }
+  .curr-group-head { display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--primary); color:#fff; border-radius:12px 12px 0 0; }
+  .curr-group-head.brk { background:#E8A87C; color:var(--primary); }
+  .curr-group-head .gnum { font-family:'D2Coding','JetBrains Mono',monospace; font-size:13px; font-weight:800; letter-spacing:0.14em; opacity:0.7; }
+  .curr-group-head .gttl { font-size:18px; font-weight:700; flex:1; }
+  .curr-group-head .gtime { font-size:14px; opacity:0.7; }
+  .curr-items { background:#fff; border:1.5px solid var(--line); border-top:none; border-radius:0 0 12px 12px; }
+  .curr-item { display:grid; grid-template-columns:60px 1fr auto; align-items:center; padding:16px 20px; border-bottom:1px solid var(--line); cursor:pointer; transition:0.15s; }
+  .curr-item:last-child { border-bottom:none; }
+  .curr-item:hover { background:var(--bg-soft); }
+  .curr-item .num { font-family:'D2Coding','JetBrains Mono',monospace; font-weight:700; color:var(--accent); font-size:14px; }
+  .curr-item .ttl { font-size:16px; color:var(--text); }
+  .curr-item .ttl .star { color:var(--accent); margin-right:6px; }
+  .curr-item .arrow { color:var(--muted); font-size:14px; }
+
+  /* main CTA */
+  .cta-section { background:var(--bg-soft); padding:80px 32px; }
+  .start-btn {
+    display:flex; align-items:center; justify-content:center; gap:18px;
+    max-width:720px; margin:0 auto;
+    padding:36px 48px;
+    background:linear-gradient(135deg, var(--accent), #e85a25);
+    color:#fff; border-radius:24px;
+    transition:0.25s;
+    box-shadow:0 16px 40px -10px rgba(255,107,53,0.5);
+  }
+  .start-btn:hover { transform:translateY(-4px); box-shadow:0 20px 50px -10px rgba(255,107,53,0.6); }
+  .start-btn .play { width:64px; height:64px; border-radius:99px; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+  .start-btn .body { text-align:left; }
+  .start-btn .body .t1 { font-size:32px; font-weight:800; letter-spacing:-0.02em; }
+  .start-btn .body .t2 { font-size:15px; opacity:0.85; margin-top:4px; }
+
+  /* ===== Coming Soon Modal ===== */
+  .modal-backdrop { position:fixed; inset:0; background:rgba(15,22,32,0.7); backdrop-filter:blur(6px); z-index:100; display:none; align-items:center; justify-content:center; padding:24px; }
+  .modal-backdrop.open { display:flex; }
+  .modal { background:#fff; border-radius:24px; padding:48px; max-width:480px; width:100%; text-align:center; }
+  .modal .em { font-size:64px; margin-bottom:16px; }
+  .modal h3 { font-size:28px; margin:0 0 14px; color:var(--primary); font-weight:800; }
+  .modal p { font-size:16px; color:var(--muted); line-height:1.6; margin:0 0 28px; }
+  .modal .acts { display:flex; gap:12px; justify-content:center; }
+  .modal .acts .btn-prim { padding:14px 24px; border-radius:10px; background:var(--accent); color:#fff; font-weight:700; }
+  .modal .acts .btn-sec { padding:14px 24px; border-radius:10px; background:var(--bg-soft); color:var(--muted); font-weight:600; }
+
+  /* ===== Slides view ===== */
+  #course-a-slides, #course-b-slides, #course-c-slides { background:#0b0d10; position:relative; }
+  #course-a-slides.active, #course-b-slides.active, #course-c-slides.active { display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  #course-b-slides.fullscreen-emulated, #course-c-slides.fullscreen-emulated { position:fixed; inset:0; z-index:9999; }
+  .slides-topbar {
+    position:absolute; top:0; left:0; right:0; z-index:50;
+    background:linear-gradient(180deg, rgba(15,22,32,0.85), rgba(15,22,32,0));
+    padding:14px 24px; display:flex; align-items:center; justify-content:space-between; color:#fff;
+    height:64px; box-sizing:border-box;
+    opacity:0; transition:opacity 0.25s;
+    pointer-events:none;
+  }
+  #course-a-slides:hover .slides-topbar,
+  #course-a-slides.chrome-visible .slides-topbar,
+  #course-b-slides:hover .slides-topbar,
+  #course-b-slides.chrome-visible .slides-topbar,
+  #course-c-slides:hover .slides-topbar,
+  #course-c-slides.chrome-visible .slides-topbar { opacity:1; pointer-events:auto; }
+  .slides-topbar .back { color:#fff; padding:8px 16px; border-radius:99px; background:rgba(255,255,255,0.08); font-size:13px; font-weight:600; transition:0.2s; }
+  .slides-topbar .back:hover { background:rgba(255,255,255,0.16); }
+  .slides-topbar .progress-track { flex:1; max-width:480px; margin:0 32px; height:4px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; }
+  .slides-topbar .progress-fill { height:100%; background:var(--accent); width:0; transition:width 0.3s; border-radius:99px; }
+  .slides-topbar .counter { font-family:'D2Coding','JetBrains Mono',monospace; font-size:14px; color:rgba(255,255,255,0.85); }
+  .slides-topbar .counter .num { color:#fff; font-weight:700; }
+
+  .slides-stage { display:flex; align-items:center; justify-content:center; padding:0; flex:1; min-height:0; background:#0b0d10; position:relative; }
+  .slide-frame { background:#fff; overflow:hidden; width:100%; height:100%; position:relative; }
+  .slide-frame deck-stage { display:block; width:100%; height:100%; }
+  .slides-bottombar {
+    position:absolute; bottom:0; left:0; right:0; z-index:50;
+    background:linear-gradient(0deg, rgba(15,22,32,0.85), rgba(15,22,32,0));
+    padding:14px 24px; display:flex; align-items:center; justify-content:space-between; color:#fff;
+    height:76px; box-sizing:border-box;
+    opacity:0; transition:opacity 0.25s;
+    pointer-events:none;
+  }
+  #course-a-slides:hover .slides-bottombar,
+  #course-a-slides.chrome-visible .slides-bottombar,
+  #course-b-slides:hover .slides-bottombar,
+  #course-b-slides.chrome-visible .slides-bottombar,
+  #course-c-slides:hover .slides-bottombar,
+  #course-c-slides.chrome-visible .slides-bottombar { opacity:1; pointer-events:auto; }
+
+  /* Emulated fullscreen fallback (when browser fullscreen API blocked, e.g. inside iframe preview) */
+  #course-a-slides.emulated-fs { position:fixed; inset:0; z-index:9999; }
+  .slides-bottombar .nav-btn { padding:12px 24px; border-radius:10px; background:rgba(255,255,255,0.08); color:#fff; font-weight:600; transition:0.2s; display:inline-flex; align-items:center; gap:8px; }
+  .slides-bottombar .nav-btn:hover:not(:disabled) { background:var(--accent); }
+  .slides-bottombar .nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+  .slides-bottombar .toc-btn { padding:12px 20px; border-radius:10px; background:rgba(255,255,255,0.08); color:#fff; font-weight:600; }
+  .slides-bottombar .toc-btn:hover { background:rgba(255,255,255,0.16); }
+
+  /* TOC drawer */
+  .toc-drawer {
+    position:fixed; right:-440px; top:0; bottom:0; width:420px; background:#fff; z-index:200;
+    box-shadow:-20px 0 60px rgba(0,0,0,0.3); transition:right 0.3s; overflow-y:auto;
+  }
+  .toc-drawer.open { right:0; }
+  .toc-head { padding:24px 28px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; }
+  .toc-head h3 { margin:0; font-size:20px; font-weight:700; color:var(--primary); }
+  .toc-close { width:32px; height:32px; border-radius:99px; background:var(--bg-soft); display:flex; align-items:center; justify-content:center; font-size:18px; color:var(--muted); }
+  .toc-list { padding:16px 0; }
+  .toc-section-head { padding:14px 28px 8px; font-size:12px; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .toc-item { display:grid; grid-template-columns:50px 1fr; padding:12px 28px; cursor:pointer; transition:0.15s; align-items:center; }
+  .toc-item:hover { background:var(--bg-soft); }
+  .toc-item.current { background:var(--accent-soft); }
+  .toc-item.current .ttl { color:var(--accent); font-weight:700; }
+  .toc-item .num { font-family:'D2Coding','JetBrains Mono',monospace; font-size:13px; color:var(--accent); font-weight:700; }
+  .toc-item .ttl { font-size:15px; color:var(--text); }
+
+  /* responsive */
+  @media (max-width: 1024px) {
+    .hero-inner { grid-template-columns:1fr; gap:32px; padding:80px 24px; }
+    .hero h1 { font-size:56px; }
+    .why-grid { grid-template-columns:repeat(2, 1fr); }
+    .courses-grid { grid-template-columns:1fr; }
+    .goals-grid, .persona-grid { grid-template-columns:1fr; }
+    .footer-inner { grid-template-columns:1fr; gap:32px; }
+    .compare-table { overflow-x:auto; }
+    .compare-table table { min-width:680px; }
+    .detail-hero h1 { font-size:44px; }
+  }
+  @media (max-width: 640px) {
+    .hero h1 { font-size:42px; }
+    .section h2 { font-size:32px; }
+    .why-grid { grid-template-columns:1fr; }
+    .topnav { display:none; }
+    .section { padding:64px 20px; }
+  }
+</style>
+
+<style id="slide-deck-css">
+
+  /* Progress bar */
+  
+
+
+  :root {
+    --primary: #1E2A3A;
+    --primary-2: #2C3E50;
+    --secondary: #4A6FA5;
+    --accent: #FF6B35;
+    --accent-soft: #FFE4D6;
+    --success: #00A86B;
+    --warning: #FFC107;
+    --warning-soft: #FFF7DD;
+    --danger: #DC3545;
+    --danger-soft: #FDE7E9;
+    --bg: #FFFFFF;
+    --bg-soft: #F5F7FA;
+    --bg-warm: #F4EFE7;
+    --text: #2C3E50;
+    --muted: #6C757D;
+    --line: #E5E9EF;
+    --ink: #1E2A3A;
+  }
+/* html,body removed */
+  deck-stage { --slide-width: 1920px; --slide-height: 1080px; }
+  deck-stage > section {
+    width:1920px; height:1080px; position:relative; overflow:hidden;
+    background:var(--bg); color:var(--text);
+    font-family:'Noto Sans KR', sans-serif;
+    box-sizing:border-box;
+  }
+  .mono { font-family:'JetBrains Mono', Consolas, monospace; }
+
+  /* ---------- Common chrome ---------- */
+  .chrome-top {
+    position:absolute; top:0; left:0; right:0; height:56px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 56px; font-size:14px; letter-spacing:0.04em; color:var(--muted);
+  }
+  .chrome-top .section-tag { font-weight:700; color:var(--primary); }
+  .chrome-top .section-tag .dot { color:var(--accent); }
+  .chrome-bot {
+    position:absolute; bottom:0; left:0; right:0; height:56px;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 56px; font-size:13px; color:var(--muted);
+  }
+  .wordmark { display:flex; align-items:center; gap:10px; }
+  .wordmark::before { content:""; width:78px; height:22px; background-image:url('images/logo-color.png'); background-size:contain; background-repeat:no-repeat; background-position:left center; display:block; }
+  .wordmark .b { display:none; }
+  .pageno .num { color:var(--primary); font-weight:700; }
+
+  /* dark variant chrome */
+  .dark .chrome-top, .dark .chrome-bot { color:rgba(255,255,255,0.55); }
+  .dark .chrome-top .section-tag { color:#fff; }
+  .dark .pageno .num { color:#fff; }
+  .dark .wordmark::before { background-image:url('images/logo-white.png'); }
+
+  /* ---------- Type ---------- */
+  h1,h2,h3,h4 { margin:0; color:var(--primary); letter-spacing:-0.02em; line-height:1.15; }
+  h1 { font-weight:800; font-size:88px; }
+  h2 { font-weight:800; font-size:64px; }
+  h3 { font-weight:700; font-size:38px; }
+  h4 { font-weight:600; font-size:24px; }
+  p { margin:0; line-height:1.55; }
+  .eyebrow { text-transform:uppercase; letter-spacing:0.18em; font-size:14px; font-weight:700; color:var(--accent); }
+  .lead { font-size:26px; color:var(--text); line-height:1.5; }
+
+  /* ---------- Components ---------- */
+  .badge-num {
+    width:48px; height:48px; border-radius:999px; background:var(--primary); color:#fff;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-weight:800; font-size:20px; flex-shrink:0;
+  }
+  .badge-num.accent { background:var(--accent); }
+  .keycap {
+    display:inline-flex; align-items:center; justify-content:center;
+    min-width:36px; padding:4px 10px; border-radius:8px;
+    background:#fff; border:1px solid #cfd5dd; box-shadow:0 2px 0 #cfd5dd;
+    font-family:'JetBrains Mono', monospace; font-weight:600; font-size:16px; color:var(--primary);
+  }
+  .keycap.lg { min-width:56px; padding:10px 16px; font-size:22px; border-radius:12px; box-shadow:0 3px 0 #cfd5dd; }
+  .code {
+    font-family:'JetBrains Mono', monospace;
+    background:#0f1620; color:#e6f0ff; padding:6px 12px; border-radius:8px; font-size:18px;
+    display:inline-block;
+  }
+  .code.light { background:#eef2f8; color:var(--primary); border:1px solid var(--line); }
+
+  .tip { background:var(--warning-soft); border-left:6px solid var(--warning); padding:18px 24px; border-radius:6px; }
+  .warn { background:var(--danger-soft); border-left:6px solid var(--danger); padding:18px 24px; border-radius:6px; }
+  .scenario { background:var(--bg-soft); border-radius:14px; padding:22px 26px; }
+  .switcher { background:#fff5ed; border:2px solid var(--accent); border-radius:14px; padding:22px 26px; }
+  .switcher h4 { color:var(--accent); }
+
+  .placeholder {
+    background:
+      repeating-linear-gradient(135deg, #f5f7fa 0 14px, #ecf0f5 14px 28px);
+    border:1.5px dashed #c8d0db; border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:#7c8898; font-family:'JetBrains Mono', monospace; font-size:14px; text-align:center;
+    padding:24px;
+  }
+  .placeholder .ph-title { font-weight:700; color:#56657a; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:6px; }
+  .placeholder .ph-sub { color:#8a96a8; font-size:12px; max-width:80%; line-height:1.4; }
+
+  /* real screenshot frame */
+  .shot {
+    position:relative;
+    background:#0F1115;
+    border-radius:12px;
+    overflow:hidden;
+    border:1.5px solid var(--line);
+    box-shadow:0 10px 28px rgba(15,17,21,0.10);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .shot.light { background:#f4f6f9; }
+  .shot img { display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; }
+  .shot .cap {
+    position:absolute; left:14px; bottom:12px;
+    font-family:'JetBrains Mono', monospace; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    color:#fff; background:rgba(15,17,21,0.72); padding:4px 9px; border-radius:6px;
+  }
+  .shot .cap.dark-cap { color:#1E2A3A; background:rgba(255,255,255,0.85); }
+
+  /* shared chrome accent line */
+  .accent-rail { position:absolute; top:0; left:0; height:6px; width:100%; background:linear-gradient(90deg, var(--primary) 0 30%, var(--accent) 30% 38%, var(--primary) 38% 100%); }
+
+  /* ============================================================ */
+  /* SLIDE-SPECIFIC                                                */
+  /* ============================================================ */
+
+  /* SLIDE 1 — Cover */
+  .s-cover { background:#0f1620; color:#fff; }
+  .s-cover .grid-bg {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at 70% 50%, #000 30%, transparent 75%);
+  }
+  .s-cover .blueprint {
+    position:absolute; right:-120px; top:120px; width:1100px; height:900px; opacity:0.18;
+  }
+  .s-cover .content { position:absolute; left:120px; top:260px; max-width:1100px; }
+  .s-cover h1 { color:#fff; font-size:108px; line-height:1.05; }
+  .s-cover .sub { color:#e6f0ff; font-size:32px; margin-top:28px; line-height:1.5; }
+  .s-cover .sub .hl { color:var(--accent); font-weight:800; }
+  .s-cover .info-row {
+    position:absolute; left:120px; bottom:120px; display:flex; gap:64px;
+    color:rgba(255,255,255,0.6); font-size:16px;
+  }
+  .s-cover .info-row .lbl { color:rgba(255,255,255,0.4); font-size:12px; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:6px; }
+  .s-cover .timer-pill {
+    display:inline-flex; align-items:center; gap:14px;
+    padding:10px 20px; border:1px solid rgba(255,255,255,0.25); border-radius:999px;
+    font-family:'JetBrains Mono', monospace; font-size:18px; color:#fff; margin-top:38px;
+  }
+  .s-cover .timer-pill .dot { width:10px; height:10px; border-radius:99px; background:var(--accent); box-shadow:0 0 18px var(--accent); }
+
+  /* SLIDE 2 — Agenda */
+  .s-agenda .timeline {
+    position:absolute; left:120px; right:120px; top:280px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:32px;
+  }
+  .agenda-card { padding:36px; border-radius:18px; background:var(--bg-soft); position:relative; min-height:520px; display:flex; flex-direction:column; }
+  .agenda-card.featured { background:var(--primary); color:#fff; }
+  .agenda-card.featured h3 { color:#fff; }
+  .agenda-card.brunch { background:var(--bg-warm); }
+  .agenda-card .step { font-family:'JetBrains Mono', monospace; font-size:14px; letter-spacing:0.14em; color:var(--accent); font-weight:700; }
+  .agenda-card .time { font-size:48px; font-weight:800; color:var(--primary); margin-top:12px; }
+  .agenda-card.featured .time { color:#fff; }
+  .agenda-card h3 { font-size:32px; margin-top:18px; }
+  .agenda-card .quote { margin-top:auto; font-size:18px; line-height:1.6; color:var(--muted); font-style:italic; }
+  .agenda-card.featured .quote { color:rgba(255,255,255,0.7); }
+  .agenda-card .icon { width:56px; height:56px; border-radius:14px; background:#fff; border:1px solid var(--line); display:flex; align-items:center; justify-content:center; margin-bottom:20px; }
+  .agenda-card.featured .icon { background:rgba(255,255,255,0.1); border-color:rgba(255,255,255,0.2); }
+
+  /* SLIDE 3 — BlueTNS intro */
+  .s-intro .body { position:absolute; left:120px; right:120px; top:240px; display:grid; grid-template-columns:1.1fr 1fr; gap:48px; }
+  .info-card { background:var(--bg-soft); border-radius:18px; padding:40px; }
+  .info-card h4 { color:var(--accent); font-size:14px; letter-spacing:0.18em; text-transform:uppercase; margin-bottom:24px; }
+  .info-card .name { font-size:42px; font-weight:800; color:var(--primary); letter-spacing:-0.02em; }
+  .info-card .name .en { color:var(--muted); font-weight:500; font-size:24px; margin-left:12px; }
+  .feat-list { margin-top:32px; display:flex; flex-direction:column; gap:18px; }
+  .feat-list .row { display:flex; gap:18px; align-items:flex-start; }
+  .feat-list .row .ico { width:42px; height:42px; border-radius:10px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+  .feat-list .row .txt { font-size:19px; color:var(--text); line-height:1.5; padding-top:6px; }
+  .profile { background:#fff; border:1px solid var(--line); border-radius:18px; padding:40px; }
+  .profile .avatar { width:120px; height:120px; border-radius:99px; background:linear-gradient(135deg, var(--primary), var(--secondary)); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:42px; }
+  .profile .field { display:flex; justify-content:space-between; padding:18px 0; border-bottom:1px dashed var(--line); }
+  .profile .field .l { color:var(--muted); font-size:14px; }
+  .profile .field .v { color:var(--primary); font-weight:600; font-size:18px; }
+  .slogan {
+    position:absolute; bottom:120px; left:120px; right:120px;
+    font-size:30px; font-weight:600; color:var(--text); letter-spacing:-0.01em;
+  }
+  .slogan .hl { color:var(--accent); font-weight:800; }
+
+  /* PART divider */
+  .s-part { background:#0f1620; color:#fff; }
+  .s-part .accent-rail { background:linear-gradient(90deg, var(--accent) 0 18%, transparent 18%); height:6px; }
+  .s-part .label { position:absolute; left:120px; top:200px; display:flex; align-items:center; gap:24px; color:rgba(255,255,255,0.6); font-size:18px; letter-spacing:0.18em; }
+  .s-part .label .num { font-family:'JetBrains Mono', monospace; color:var(--accent); font-size:20px; font-weight:700; }
+  .s-part .title { position:absolute; left:120px; top:300px; right:120px; }
+  .s-part .title h1 { color:#fff; font-size:128px; line-height:1.0; }
+  .s-part .sub { position:absolute; left:120px; bottom:200px; color:#fff; font-size:38px; font-weight:300; line-height:1.4; max-width:1300px; }
+  .s-part .sub .hl { color:var(--accent); font-weight:700; }
+  .vs-row { position:absolute; right:120px; bottom:200px; display:flex; gap:24px; align-items:center; color:rgba(255,255,255,0.85); font-family:'JetBrains Mono', monospace; }
+  .vs-row .a, .vs-row .b { padding:14px 20px; border:1px solid rgba(255,255,255,0.2); border-radius:10px; }
+  .vs-row .a { background:rgba(255,255,255,0.05); }
+  .vs-row .b { background:var(--accent); border-color:var(--accent); color:#fff; }
+  .vs-row .x { font-size:24px; color:rgba(255,255,255,0.4); }
+
+  /* slide title bar (shared content slides) */
+  .slide-head { position:absolute; left:120px; right:120px; top:80px; }
+  .slide-head .eyebrow { color:var(--accent); font-size:13px; letter-spacing:0.18em; }
+  .slide-head h2 { font-size:54px; margin-top:8px; }
+
+  /* SLIDE 5 — interface */
+  .s5 .body { position:absolute; left:120px; right:120px; top:240px; display:grid; grid-template-columns:1.4fr 1fr; gap:48px; }
+  .s5 .points { display:flex; flex-direction:column; gap:24px; }
+  .point-card { background:var(--bg-soft); border-radius:14px; padding:28px 32px; display:flex; gap:22px; align-items:flex-start; }
+  .point-card .num { width:46px; height:46px; border-radius:12px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:20px; flex-shrink:0; }
+  .point-card h4 { font-size:24px; margin-bottom:8px; }
+  .point-card p { color:var(--muted); font-size:18px; }
+  .s5 .ph-stack { display:flex; flex-direction:column; gap:20px; }
+  .s5 .ph-big { height:420px; }
+  .s5 .ph-small { height:160px; }
+
+  /* SLIDE 6 — 5 options grid */
+  .s6 .body { position:absolute; left:120px; right:120px; top:230px; }
+  .s6 .lead { font-size:24px; color:var(--muted); margin-bottom:48px; }
+  .s6 .grid { display:grid; grid-template-columns:repeat(5, 1fr); gap:24px; }
+  .opt-card { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:36px 28px; min-height:380px; position:relative; transition:transform 0.2s; }
+  .opt-card .num-badge { position:absolute; top:-22px; left:28px; width:44px; height:44px; border-radius:99px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:20px; }
+  .opt-card .ico-circle { width:64px; height:64px; border-radius:18px; background:var(--bg-soft); display:flex; align-items:center; justify-content:center; margin-top:12px; margin-bottom:24px; }
+  .opt-card h4 { font-size:22px; margin-bottom:14px; }
+  .opt-card p { color:var(--muted); font-size:15px; line-height:1.5; }
+  .opt-card .tag { font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--accent); letter-spacing:0.06em; margin-top:20px; display:block; }
+
+  /* SLIDE 7/8 — option detail */
+  .s78 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1fr 1.1fr; gap:48px; }
+  .opt-detail { background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:28px 32px; position:relative; }
+  .opt-detail .head { display:flex; align-items:center; gap:18px; margin-bottom:20px; }
+  .opt-detail .num { width:44px; height:44px; border-radius:12px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; }
+  .opt-detail h4 { font-size:24px; }
+  .opt-detail .row { display:flex; gap:14px; padding:8px 0; font-size:16px; }
+  .opt-detail .row .l { color:var(--muted); width:90px; flex-shrink:0; }
+  .opt-detail .row .v { color:var(--text); flex:1; }
+  .opt-detail .reco { color:var(--accent); font-weight:700; }
+  .opt-detail .why { font-style:italic; color:var(--secondary); }
+  .opt-list { display:flex; flex-direction:column; gap:18px; }
+
+  /* SLIDE 9 — shortcuts */
+  .s9 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-rows:auto auto; gap:28px; }
+  .method-row { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+  .method-card { background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:28px; }
+  .method-card .lbl { color:var(--accent); font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.1em; }
+  .method-card h4 { font-size:26px; margin:8px 0 16px; }
+  .method-card .step { color:var(--text); font-size:16px; line-height:1.6; }
+  .method-card .pro { margin-top:14px; color:var(--success); font-size:14px; font-weight:600; }
+  .s9 .lower { display:grid; grid-template-columns:1.2fr 1fr; gap:28px; }
+
+  /* SLIDE 10 — osnap */
+  .s10 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1.3fr 1fr; gap:32px; }
+  .osnap-hero { background:var(--primary); color:#fff; border-radius:18px; padding:36px; }
+  .osnap-hero .three { display:flex; gap:18px; margin-top:24px; }
+  .osnap-hero .pill { flex:1; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18); border-radius:14px; padding:24px; text-align:center; }
+  .osnap-hero .pill .key { font-family:'JetBrains Mono', monospace; font-size:36px; font-weight:800; color:var(--accent); }
+  .osnap-hero .pill .desc { font-size:14px; color:rgba(255,255,255,0.7); margin-top:6px; }
+  .osnap-hero h4 { color:#fff; font-size:22px; }
+  .opt-table { background:#fff; border:1.5px solid var(--line); border-radius:14px; overflow:hidden; }
+  .opt-table .row { display:grid; grid-template-columns:120px 1fr; padding:14px 22px; border-top:1px solid var(--line); align-items:center; }
+  .opt-table .row:first-child { border-top:none; }
+  .opt-table .row .k { font-family:'JetBrains Mono', monospace; font-weight:700; color:var(--accent); }
+  .opt-table .row .v { color:var(--text); font-size:16px; }
+  .opt-table .head { background:var(--bg-soft); font-size:13px; color:var(--muted); letter-spacing:0.1em; text-transform:uppercase; }
+
+  /* SLIDE 11 — turn off F-keys */
+  .s11 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1.2fr 1fr; gap:40px; }
+  .fkey-list { display:flex; flex-direction:column; gap:14px; }
+  .fkey-row { display:grid; grid-template-columns:140px 1fr 1.4fr; align-items:center; gap:18px; background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:18px 22px; }
+  .fkey-row .key { display:flex; align-items:center; gap:8px; }
+  .fkey-row .key .x { color:var(--danger); font-family:'JetBrains Mono', monospace; font-weight:800; }
+  .fkey-row .name { font-size:18px; font-weight:600; color:var(--primary); }
+  .fkey-row .why { font-size:15px; color:var(--muted); }
+  .keyboard-art { background:var(--primary); border-radius:18px; padding:36px; color:#fff; }
+  .keyboard-art .row { display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap; }
+  .keyboard-art .k { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.16); border-radius:8px; padding:10px 12px; font-family:'JetBrains Mono', monospace; font-size:13px; min-width:42px; text-align:center; }
+  .keyboard-art .k.off { background:var(--danger); border-color:var(--danger); position:relative; }
+  .keyboard-art .k.off::after { content:""; position:absolute; inset:6px; border:2px solid #fff; border-radius:6px; transform:rotate(0deg); }
+  .keyboard-art .k.off::before { content:"✕"; position:absolute; right:-6px; top:-8px; background:#fff; color:var(--danger); width:18px; height:18px; border-radius:99px; font-size:12px; display:flex; align-items:center; justify-content:center; font-weight:800; }
+
+  /* SLIDE 12 — migration */
+  .s12 .body { position:absolute; left:120px; right:120px; top:230px; }
+  .scenario-bubble { background:var(--bg-soft); border-radius:18px; padding:28px 32px; display:flex; gap:20px; align-items:flex-start; }
+  .scenario-bubble .ico { width:56px; height:56px; border-radius:14px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:28px; flex-shrink:0; }
+  .scenario-bubble .txt { font-size:22px; color:var(--text); line-height:1.5; }
+  .scenario-bubble .txt .a { color:var(--accent); font-weight:800; }
+  .steps { display:grid; grid-template-columns:1fr 1fr 1fr; gap:24px; margin-top:36px; position:relative; }
+  .step-card { background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:28px; min-height:280px; position:relative; }
+  .step-card .step-no { font-family:'JetBrains Mono', monospace; color:var(--accent); font-weight:800; font-size:14px; letter-spacing:0.14em; }
+  .step-card h4 { font-size:22px; margin:10px 0 14px; }
+  .step-card p { color:var(--muted); font-size:16px; line-height:1.55; }
+  .step-card .arrow { position:absolute; right:-30px; top:50%; transform:translateY(-50%); color:var(--accent); font-size:32px; font-weight:800; z-index:2; }
+
+  /* SLIDE 13 — summary */
+  .s13 { background:var(--bg-soft); }
+  .s13 .body { position:absolute; left:120px; right:120px; top:200px; display:grid; grid-template-columns:1fr 1.4fr; gap:64px; }
+  .s13 .check-list { display:flex; flex-direction:column; gap:14px; }
+  .s13 .check-list .item { display:flex; gap:14px; align-items:flex-start; padding:12px 0; border-bottom:1px solid var(--line); font-size:18px; color:var(--text); }
+  .s13 .check-list .check { width:28px; height:28px; border-radius:8px; background:var(--success); color:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-weight:800; }
+  .s13 .big-msg { display:flex; flex-direction:column; justify-content:center; }
+  .s13 .big-msg .quote { font-size:54px; font-weight:800; color:var(--primary); line-height:1.25; letter-spacing:-0.02em; }
+  .s13 .big-msg .quote .hl { color:var(--accent); }
+  .s13 .big-msg .sub { font-size:20px; color:var(--muted); margin-top:32px; }
+
+  /* SLIDE 14 — break */
+  .s-break { background:#F4EFE7; }
+  .s-break .pad { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px; }
+  .s-break .cup { font-size:120px; }
+  .s-break h1 { font-size:120px; margin-top:20px; color:var(--primary); }
+  .s-break .sub { font-size:32px; color:var(--text); margin-top:24px; }
+  .s-break .timer { margin-top:48px; padding:18px 28px; background:#fff; border-radius:99px; display:inline-flex; align-items:center; gap:16px; font-family:'JetBrains Mono', monospace; font-size:24px; color:var(--primary); border:2px solid var(--accent); }
+
+  /* SLIDE 16 — ZDREAM intro */
+  .s16 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1fr 1.3fr; gap:48px; }
+  .gift-box { background:linear-gradient(160deg, var(--primary), #2d3e54); border-radius:24px; padding:48px; color:#fff; min-height:540px; position:relative; overflow:hidden; }
+  .gift-box::after { content:""; position:absolute; right:-60px; bottom:-60px; width:280px; height:280px; border-radius:99px; background:var(--accent); opacity:0.18; }
+  .gift-box .lbl { color:var(--accent); font-family:'JetBrains Mono', monospace; font-size:14px; letter-spacing:0.18em; }
+  .gift-box .name { font-size:88px; font-weight:900; letter-spacing:-0.03em; margin-top:14px; }
+  .gift-box .desc { font-size:22px; line-height:1.6; color:rgba(255,255,255,0.85); margin-top:28px; }
+  .gift-box .ribbon { position:absolute; top:24px; right:-50px; transform:rotate(38deg); background:var(--accent); color:#fff; padding:8px 80px; font-weight:800; font-size:14px; letter-spacing:0.1em; }
+  .fact-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .fact-card { background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:28px; }
+  .fact-card .num { font-family:'JetBrains Mono', monospace; color:var(--accent); font-size:14px; font-weight:800; letter-spacing:0.14em; }
+  .fact-card .v { font-size:36px; font-weight:800; color:var(--primary); margin:8px 0 10px; letter-spacing:-0.02em; }
+  .fact-card .d { color:var(--muted); font-size:15px; line-height:1.5; }
+
+  /* SLIDE 17 — coordinates intro */
+  .s17 .body { position:absolute; left:120px; right:120px; top:230px; }
+  .ba { display:grid; grid-template-columns:1fr auto 1fr; gap:32px; align-items:center; }
+  .ba-box { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:32px; min-height:420px; }
+  .ba-box.bad { border-color:var(--danger); background:#fff8f9; }
+  .ba-box.good { border-color:var(--success); background:#f5fcf9; }
+  .ba-box .tag { display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:800; letter-spacing:0.1em; padding:6px 12px; border-radius:99px; }
+  .ba-box.bad .tag { background:var(--danger); color:#fff; }
+  .ba-box.good .tag { background:var(--success); color:#fff; }
+  .ba-box h4 { font-size:26px; margin:14px 0 18px; }
+  .ba-box ul { padding:0; margin:0; list-style:none; }
+  .ba-box ul li { padding:8px 0; font-size:18px; color:var(--text); display:flex; gap:10px; }
+  .ba-box ul li::before { content:"—"; color:var(--muted); }
+  .ba-arrow { display:flex; flex-direction:column; align-items:center; gap:14px; }
+  .ba-arrow .a { font-size:56px; color:var(--accent); font-weight:800; }
+  .ba-arrow .lbl { font-size:14px; color:var(--muted); letter-spacing:0.14em; }
+  .next-up { margin-top:36px; display:flex; gap:20px; }
+  .next-pill { flex:1; background:var(--primary); color:#fff; padding:24px 32px; border-radius:14px; display:flex; align-items:center; gap:18px; }
+  .next-pill .cmd { font-family:'JetBrains Mono', monospace; font-size:32px; font-weight:800; color:var(--accent); }
+  .next-pill .desc { font-size:18px; }
+
+  /* SLIDE 18/19 — CIM/CEX */
+  .s1819 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1fr 1.1fr; gap:48px; }
+  .cmd-hero { background:var(--primary); color:#fff; padding:32px; border-radius:18px; }
+  .cmd-hero .cmd-row { display:flex; align-items:baseline; gap:18px; }
+  .cmd-hero .cmd-name { font-family:'JetBrains Mono', monospace; font-size:84px; font-weight:800; color:var(--accent); letter-spacing:-0.02em; }
+  .cmd-hero .cmd-desc { font-size:20px; color:rgba(255,255,255,0.75); }
+  .cmd-hero .summary { font-size:20px; line-height:1.6; margin-top:18px; }
+  .three-step { margin-top:28px; display:flex; flex-direction:column; gap:16px; }
+  .three-step .step { background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.16); border-radius:12px; padding:18px 22px; }
+  .three-step .step .n { color:var(--accent); font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.12em; font-weight:700; }
+  .three-step .step .h { font-size:18px; font-weight:600; margin:6px 0 6px; }
+  .three-step .step .d { font-size:14px; color:rgba(255,255,255,0.7); line-height:1.5; }
+  .scenario-list { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:28px; }
+  .scenario-list h4 { font-size:18px; color:var(--accent); letter-spacing:0.14em; text-transform:uppercase; font-family:'JetBrains Mono', monospace; }
+  .scenario-list .item { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); align-items:center; }
+  .scenario-list .item:last-child { border-bottom:none; }
+  .scenario-list .item .ico { width:36px; height:36px; border-radius:8px; background:var(--bg-soft); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .scenario-list .item .txt { font-size:17px; color:var(--text); }
+
+  /* SLIDE 20 — MPL hero */
+  .s20 { background:var(--primary); color:#fff; }
+  .s20 .chrome-top, .s20 .chrome-bot { color:rgba(255,255,255,0.55); }
+  .s20 .chrome-top .section-tag { color:#fff; }
+  .s20 .pageno .num { color:#fff; }
+  .s20 .wordmark::before { background-image:url('images/logo-white.png'); }
+  .s20 .head { position:absolute; left:120px; top:120px; right:120px; }
+  .s20 .head .eyebrow { color:var(--accent); }
+  .s20 .head h2 { color:#fff; font-size:60px; }
+  .s20 .body { position:absolute; left:120px; right:120px; top:280px; display:grid; grid-template-columns:1.2fr 1fr; gap:48px; }
+  .impact-box { background:rgba(255,255,255,0.06); border-left:6px solid var(--accent); padding:36px; border-radius:8px; }
+  .impact-box .quote { font-size:36px; font-weight:800; line-height:1.3; }
+  .impact-box .quote .hl { color:var(--accent); }
+  .impact-box .compare { display:flex; gap:24px; margin-top:24px; font-family:'JetBrains Mono', monospace; }
+  .impact-box .compare .pill { flex:1; padding:14px 18px; border-radius:10px; }
+  .impact-box .compare .a { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.7); text-decoration:line-through; }
+  .impact-box .compare .b { background:var(--accent); color:#fff; font-weight:700; }
+  .opt-8 { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .opt-8 .o { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:14px 18px; display:flex; gap:14px; align-items:center; }
+  .opt-8 .o .n { width:30px; height:30px; border-radius:99px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0; }
+  .opt-8 .o .t { font-size:15px; color:#fff; }
+  .opt-8 .o .t span { display:block; font-size:12px; color:rgba(255,255,255,0.6); margin-top:2px; }
+  .scenario-bottom { position:absolute; left:120px; right:120px; bottom:96px; display:flex; gap:18px; }
+  .scenario-bottom .s { flex:1; background:rgba(255,255,255,0.06); border-radius:12px; padding:18px 22px; font-size:16px; color:#fff; display:flex; gap:12px; align-items:center; }
+
+  /* SLIDE 21 — ETC */
+  .s21 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1fr auto 1fr; gap:36px; }
+  .dir-card { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:32px; min-height:540px; }
+  .dir-card .dir-tag { font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--accent); font-weight:800; letter-spacing:0.14em; }
+  .dir-card .dir-title { font-size:36px; font-weight:800; color:var(--primary); margin:8px 0 24px; letter-spacing:-0.02em; }
+  .dir-card .pt { display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
+  .dir-card .pt:last-child { border-bottom:none; }
+  .dir-card .pt .b { color:var(--accent); font-weight:800; }
+  .dir-card .pt .t { font-size:17px; color:var(--text); line-height:1.55; flex:1; }
+  .dir-card .use { background:var(--bg-soft); border-radius:10px; padding:14px 18px; margin-top:18px; font-size:15px; color:var(--muted); }
+  .dir-card .use b { color:var(--primary); }
+  .swap-arrow { display:flex; align-items:center; }
+  .swap-arrow .ring { width:120px; height:120px; border-radius:99px; border:3px solid var(--accent); display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:48px; font-weight:800; }
+  .common-opts { position:absolute; left:120px; right:120px; bottom:120px; display:grid; grid-template-columns:repeat(4, 1fr); gap:18px; }
+  .common-opts .o { background:var(--bg-soft); border-radius:10px; padding:14px 18px; font-size:15px; color:var(--text); display:flex; gap:10px; align-items:center; }
+  .common-opts .o .d { width:8px; height:8px; border-radius:99px; background:var(--accent); flex-shrink:0; }
+
+  /* SLIDE 22 — efficiency tools */
+  .s22 .body { position:absolute; left:120px; right:120px; top:230px; }
+  .tool-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:22px; }
+  .tool-card { background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:24px 28px; min-height:200px; position:relative; }
+  .tool-card .cmd { font-family:'JetBrains Mono', monospace; font-weight:800; font-size:32px; color:var(--accent); letter-spacing:-0.01em; }
+  .tool-card .ttl { font-size:18px; font-weight:600; color:var(--primary); margin-top:6px; }
+  .tool-card .desc { font-size:15px; color:var(--muted); margin-top:10px; line-height:1.5; }
+  .tool-card .badge { position:absolute; top:24px; right:28px; font-family:'JetBrains Mono', monospace; font-size:11px; padding:3px 8px; border-radius:99px; background:var(--bg-soft); color:var(--muted); letter-spacing:0.08em; }
+
+  /* SLIDE 23 — LISP */
+  .s23 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:1fr 1.1fr; gap:40px; }
+  .lisp-steps { display:flex; flex-direction:column; gap:14px; }
+  .lisp-step { display:flex; gap:18px; align-items:flex-start; background:#fff; border:1.5px solid var(--line); border-radius:14px; padding:20px 24px; }
+  .lisp-step .n { width:38px; height:38px; border-radius:10px; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; }
+  .lisp-step .h { font-size:18px; font-weight:600; }
+  .lisp-step .d { font-size:14px; color:var(--muted); margin-top:4px; }
+  .service-box { background:linear-gradient(160deg, var(--primary), #2d3e54); color:#fff; border-radius:18px; padding:36px; }
+  .service-box h4 { color:#fff; font-size:24px; margin-bottom:18px; }
+  .service-box ul { list-style:none; padding:0; margin:0; }
+  .service-box li { padding:10px 0; font-size:17px; display:flex; gap:12px; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); }
+  .service-box li:last-child { border-bottom:none; }
+  .service-box li .ck { width:24px; height:24px; border-radius:99px; background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+  .service-box .note { margin-top:18px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.15); font-size:15px; color:rgba(255,255,255,0.7); font-style:italic; }
+
+  /* SLIDE 24 — recap */
+  .s24 .body { position:absolute; left:120px; right:120px; top:220px; display:grid; grid-template-columns:1fr 1fr; gap:32px; }
+  .recap-col { background:var(--bg-soft); border-radius:18px; padding:32px; }
+  .recap-col.p2 { background:var(--primary); color:#fff; }
+  .recap-col.p2 h4 { color:#fff; }
+  .recap-col h4 { font-size:14px; letter-spacing:0.18em; color:var(--accent); margin-bottom:18px; font-family:'JetBrains Mono', monospace; }
+  .recap-col .it { padding:14px 0; border-bottom:1px solid var(--line); font-size:18px; display:flex; gap:12px; align-items:center; }
+  .recap-col.p2 .it { border-color:rgba(255,255,255,0.1); }
+  .recap-col .it .ico { width:28px; flex-shrink:0; text-align:center; font-weight:800; color:var(--success); }
+  .recap-col.p2 .it .ico { color:var(--accent); }
+  .center-msg { position:absolute; left:120px; right:120px; bottom:96px; text-align:center; }
+  .center-msg .q1 { font-size:24px; color:var(--primary); font-weight:600; }
+  .center-msg .q2 { font-size:18px; color:var(--muted); margin-top:6px; }
+  .center-msg .q1 .hl { color:var(--accent); font-weight:800; }
+
+  /* SLIDE 25 — channels */
+  .s25 .body { position:absolute; left:120px; right:120px; top:230px; display:grid; grid-template-columns:repeat(3, 1fr); gap:24px; }
+  .ch-card { background:#fff; border:1.5px solid var(--line); border-radius:18px; padding:36px 32px; min-height:340px; transition:0.2s; position:relative; }
+  .ch-card .ico-big { width:64px; height:64px; border-radius:16px; background:var(--bg-soft); display:flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:20px; }
+  .ch-card h4 { font-size:24px; margin-bottom:14px; }
+  .ch-card .l { font-size:14px; color:var(--muted); margin-top:10px; }
+  .ch-card .v { font-size:17px; color:var(--primary); font-weight:600; }
+  .ch-card.featured { background:var(--primary); color:#fff; border-color:var(--primary); }
+  .ch-card.featured h4 { color:#fff; }
+  .ch-card.featured .l { color:rgba(255,255,255,0.6); }
+  .ch-card.featured .v { color:#fff; }
+  .ch-card.featured .ico-big { background:rgba(255,255,255,0.1); }
+
+  .feedback-box { position:absolute; left:120px; right:120px; bottom:120px; background:var(--accent-soft); border:2px solid var(--accent); border-radius:18px; padding:28px 36px; display:grid; grid-template-columns:1fr auto; gap:32px; align-items:center; }
+  .feedback-box .l h4 { color:var(--accent); margin-bottom:8px; }
+  .feedback-box .l p { color:var(--text); font-size:17px; line-height:1.5; }
+  .feedback-box .qr-slot { width:130px; height:130px; border:2px dashed var(--accent); border-radius:14px; background:#fff; display:flex; align-items:center; justify-content:center; font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--accent); font-weight:700; }
+
+  /* SLIDE 26 — closing */
+  .s-end { background:#0f1620; color:#fff; }
+  .s-end .grid-bg {
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse at 50% 50%, #000 30%, transparent 75%);
+  }
+  .s-end .pad { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:120px; }
+  .s-end h1 { color:#fff; font-size:180px; letter-spacing:-0.04em; }
+  .s-end .sub { color:rgba(255,255,255,0.7); font-size:32px; margin-top:24px; }
+  .s-end .accent-line { width:120px; height:6px; background:var(--accent); margin-top:36px; }
+  .s-end .info-row { position:absolute; bottom:120px; left:120px; right:120px; display:flex; justify-content:space-between; color:rgba(255,255,255,0.6); font-size:14px; }
+
+  /* utility classes */
+  .row-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+  .row-3 { display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  .gap-l { gap:32px; }
+  .mt-l { margin-top:32px; }
+  .text-center { text-align:center; }
+
+  /* tip / warn full width */
+  .full-tip { background:var(--warning-soft); border-left:6px solid var(--warning); padding:20px 28px; border-radius:8px; font-size:18px; color:var(--text); line-height:1.55; }
+  .full-warn { background:var(--danger-soft); border-left:6px solid var(--danger); padding:20px 28px; border-radius:8px; font-size:18px; color:var(--text); line-height:1.55; }
+  .full-tip b, .full-warn b { color:var(--primary); }
+
+
+  /* ============ Print CSS — one slide per page ============ */
+  @media print {
+    @page { size: 1920px 1080px landscape; margin: 0; }
+/* html,body removed */
+    #deckProgress, #fsBtn { display:none !important; }
+    deck-stage { all: unset; display: block !important; transform: none !important; }
+    deck-stage > section {
+      display: block !important;
+      width: 1920px !important;
+      height: 1080px !important;
+      page-break-after: always;
+      break-after: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      box-shadow: none !important;
+      transform: none !important;
+      position: relative !important;
+      margin: 0 !important;
+    }
+    deck-stage > section:last-child { page-break-after: auto; break-after: auto; }
+  }
+
+
+/* Override: when deck-stage is inside our own scaler, disable its own scaling — we scale the wrapper */
+#course-a-slides deck-stage { background:transparent; }
+#course-a-slides .slide-frame { background:#fff; }
+</style>
+<script src="deck-stage.js"></script>
+</head>
+<body>
+
+<!-- ============================ HUB ============================ -->
+<div class="view active" id="hub">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo" onclick="showView('hub')"><img src="images/logo-color.png" alt="BlueTNS"/><span class="divider"></span><span class="sub">EA Training</span></div>
+      <nav class="topnav">
+        <a href="#why">왜 BlueTNS인가</a>
+        <a href="#courses">코스 선택</a>
+        <a href="#compare">코스 비교</a>
+        <a class="cta-mini" href="#" onclick="event.preventDefault(); openContact();">전담 매니저 문의</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow">ZWCAD 전문 교육 프로그램</div>
+        <h1>신입에서 마스터까지,<br/>건설 실무자를 위한<br/><span class="hl">ZWCAD 교육.</span></h1>
+        <p class="lead">블루티엔에스가 직접 방문하여 진행하는<br/>현장 맞춤형 교육 프로그램입니다.</p>
+        <a class="hero-cta" href="#courses">코스 둘러보기 <span>↓</span></a>
+      </div>
+      <div class="hero-blueprint">
+        <svg viewBox="0 0 600 500" fill="none" stroke="#FF6B35" stroke-width="1.5">
+          <rect x="40" y="40" width="520" height="420"/>
+          <rect x="100" y="100" width="240" height="160"/>
+          <rect x="100" y="280" width="160" height="160"/>
+          <rect x="280" y="280" width="220" height="160"/>
+          <line x1="40" y1="180" x2="560" y2="180" stroke-dasharray="6 8"/>
+          <line x1="40" y1="370" x2="560" y2="370" stroke-dasharray="6 8"/>
+          <line x1="220" y1="40" x2="220" y2="460" stroke-dasharray="6 8"/>
+          <line x1="400" y1="40" x2="400" y2="460" stroke-dasharray="6 8"/>
+          <circle cx="100" cy="180" r="6" fill="#FF6B35"/>
+          <circle cx="280" cy="280" r="6" fill="#FF6B35"/>
+          <circle cx="400" cy="180" r="6" fill="#FF6B35"/>
+          <text x="120" y="140" fill="#FF6B35" font-family="monospace" font-size="14" stroke="none">ZWCAD</text>
+          <text x="120" y="320" fill="#FF6B35" font-family="monospace" font-size="14" stroke="none">ZDREAM</text>
+          <text x="300" y="320" fill="#FF6B35" font-family="monospace" font-size="14" stroke="none">FIELD</text>
+        </svg>
+      </div>
+    </div>
+    <div class="scroll-indicator">SCROLL<div class="arrow"></div></div>
+  </section>
+
+  <!-- Why BlueTNS -->
+  <section class="section" id="why">
+    <div class="section-eyebrow">WHY BLUETNS</div>
+    <h2>왜 BlueTNS의 ZWCAD 교육인가.</h2>
+    <p class="sub">대기업 고객사의 IT 솔루션 파트너로서, 건설 분야 실무에 깊이 닿아 있는 교육을 만듭니다.</p>
+    <div class="why-grid">
+      <div class="why-card"><div class="why-icon">🏢</div><h3>건설 분야 특화</h3><p>시공도·좌표·수량 산출 등 실무 시나리오 기반</p></div>
+      <div class="why-card"><div class="why-icon">🛠️</div><h3>공식 EA 총판</h3><p>ZWCAD KOREA 공식 EA 총판의 검증된 커리큘럼</p></div>
+      <div class="why-card"><div class="why-icon">👥</div><h3>방문 교육</h3><p>5명 이상이면 직접 방문해 진행합니다</p></div>
+      <div class="why-card"><div class="why-icon">📞</div><h3>사후 지원</h3><p>교육 후에도 LISP 검토·맞춤 자동화 지원</p></div>
+    </div>
+  </section>
+
+  <!-- 3 Courses -->
+  <section class="section courses-section" id="courses">
+    <div class="section-eyebrow">CHOOSE YOUR COURSE</div>
+    <h2>여러분께 맞는 코스를 선택해 주세요.</h2>
+    <p class="sub">목적·인원·시간에 따라 3가지 깊이로 준비했습니다. 처음이라면 브런치 코스부터 시작해 보세요.</p>
+
+    <div class="courses-grid">
+      <!-- Course A -->
+      <div class="course-card" onclick="showView('course-a-detail')">
+        <div class="course-tag popular">가장 많이 신청해요</div>
+        <div class="course-banner a">
+          <div class="course-emoji">🥐</div>
+          <h3>브런치 코스</h3>
+          <div class="course-time">1시간<span class="small">30분 + 브런치 + 30분</span></div>
+        </div>
+        <div class="course-body">
+          <div class="course-target">신규·전환자 입문</div>
+          <ul class="course-features">
+            <li><span class="ck">✓</span>ZWCAD 셋팅 5종</li>
+            <li><span class="ck">✓</span>ZDREAM 핵심 기능</li>
+            <li><span class="ck">✓</span>브런치 제공 — 소통 시간</li>
+          </ul>
+          <button class="course-cta primary">자세히 보기 →</button>
+        </div>
+      </div>
+
+      <!-- Course B -->
+      <div class="course-card" onclick="showView('course-b-detail')">
+        <div class="course-tag recommend">BlueTNS 추천</div>
+        <div class="course-banner b">
+          <div class="course-emoji">📐</div>
+          <h3>스탠다드 코스</h3>
+          <div class="course-time">3시간<span class="small">반나절 집중</span></div>
+        </div>
+        <div class="course-body">
+          <div class="course-target">실무 적응 · 협업 표준</div>
+          <ul class="course-features">
+            <li><span class="ck">✓</span>브런치 코스 전체 + 표준 협업</li>
+            <li><span class="ck">✓</span>도곽·레이어·문자·치수 표준</li>
+            <li><span class="ck">✓</span>ZDREAM 응용 + 작도 효율 8선</li>
+          </ul>
+          <button class="course-cta primary" style="background:var(--secondary);">자세히 보기 →</button>
+        </div>
+      </div>
+
+      <!-- Course C -->
+      <div class="course-card" onclick="showView('course-c-detail')">
+        <div class="course-tag org">★ MASTER</div>
+        <div class="course-banner c">
+          <div class="course-emoji">🏗️</div>
+          <h3>마스터 코스</h3>
+          <div class="course-time">풀데이<span class="small">6~7시간</span></div>
+        </div>
+        <div class="course-body">
+          <div class="course-target">조직 표준화 추진</div>
+          <ul class="course-features">
+            <li><span class="ck">✓</span>스탠다드 코스 전체</li>
+            <li><span class="ck">✓</span>LISP 심화 활용</li>
+            <li><span class="ck">✓</span>회사 표준 컨설팅</li>
+          </ul>
+          <button class="course-cta primary" style="background:linear-gradient(135deg, #2C3E50, #D4AF37);">자세히 보기 →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="section compare-section" id="compare">
+    <div class="section-eyebrow">COMPARE</div>
+    <h2>어떤 코스가 맞을까? — 한눈에 비교.</h2>
+    <p class="sub">소요 시간, 인원, 다루는 범위를 한 번에 살펴보세요.</p>
+
+    <div class="compare-table">
+      <table>
+        <thead>
+          <tr>
+            <th class="row-label">항목</th>
+            <th class="col-a">🥐 브런치</th>
+            <th>📐 스탠다드</th>
+            <th>🏗️ 마스터</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="row-label">소요 시간</td><td class="col-a"><b>1시간</b></td><td>3시간</td><td>6~7시간</td></tr>
+          <tr><td class="row-label">포맷</td><td class="col-a">30분 + 브런치 + 30분</td><td>반나절 집중</td><td>풀데이 + 점심</td></tr>
+          <tr><td class="row-label">권장 인원</td><td class="col-a">5~20명</td><td>5~15명</td><td>5~10명</td></tr>
+          <tr><td class="row-label">CAD 기초 셋팅</td><td class="col-a"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td class="row-label">ZDREAM 핵심</td><td class="col-a"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td class="row-label">2D 도면 표준</td><td class="col-a"><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td class="row-label">블록·도곽 실습</td><td class="col-a"><span class="dash">—</span></td><td><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td class="row-label">LISP 심화</td><td class="col-a"><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td class="row-label">회사 표준 컨설팅</td><td class="col-a"><span class="dash">—</span></td><td><span class="dash">—</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td class="row-label">부록 자료 제공</td><td class="col-a">6종</td><td>8종</td><td>10종 + 표준안</td></tr>
+          <tr><td class="row-label">상태</td><td class="col-a"><span class="status-active">🟢 신청 가능</span></td><td><span class="status-active">🟢 신청 가능</span></td><td><span class="status-coming">🟡 준비 중</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="compare-cta">
+      <div class="l">
+        <h4>💬 여전히 고민되시나요?</h4>
+        <p>전담 매니저에게 문의해 주세요 — 고객사 상황에 맞는 코스를 함께 찾아드립니다.</p>
+      </div>
+      <button class="btn-secondary" onclick="openContact()">전담 매니저 문의 →</button>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="logo"><img src="images/logo-white.png" alt="BlueTNS" style="height:38px;"/></div>
+        <div class="footer-tag" style="margin-top:18px;">대기업 전담 IT 솔루션 파트너 · ZWCAD 공식 EA 총판</div>
+        <div class="footer-quote">"여러분의 효율적인 작업이 저희의 일입니다"</div>
+      </div>
+      <div>
+        <h5>빠른 링크</h5>
+        <ul class="footer-list">
+          <li><a href="#courses">교육 신청</a></li>
+          <li><a href="#" onclick="event.preventDefault(); openContact();">기술 지원</a></li>
+          <li><a href="#" onclick="event.preventDefault(); openContact();">회사 소개</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>연락처</h5>
+        <ul class="footer-list">
+          <li>전담 매니저 · 안병현 차장</li>
+          <li>이메일 · <a href="mailto:bhahn@bluetns.co.kr" style="color:rgba(255,255,255,0.85);">bhahn@bluetns.co.kr</a></li>
+          <li>연락처 · 010-6437-4963</li>
+          <li>평일 09:00 – 18:00</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 BlueTNS. All rights reserved.</div>
+      <div>v1.0 · EA Training Hub</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================ COURSE A DETAIL ============================ -->
+<div class="view" id="course-a-detail">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo" onclick="showView('hub')"><img src="images/logo-color.png" alt="BlueTNS"/><span class="divider"></span><span class="sub">EA Training</span></div>
+      <nav class="topnav">
+        <a href="#" onclick="event.preventDefault(); showView('hub');">← 다른 코스 보기</a>
+        <a class="cta-mini" href="#" onclick="event.preventDefault(); enterSlides();">교육 시작하기 ▶</a>
+      </nav>
+    </div>
+  </div>
+
+  <section class="detail-hero">
+    <div class="detail-hero-inner">
+      <a class="back-link" href="#" onclick="event.preventDefault(); showView('hub');">← 다른 코스 보기</a>
+      <div class="detail-emoji">🥐</div>
+      <h1>브런치 코스</h1>
+      <div class="formula"><b>30분</b> 셋팅 &nbsp;+&nbsp; <b>브런치</b> &nbsp;+&nbsp; <b>30분</b> ZDREAM = <b>1시간</b></div>
+      <div class="detail-meta">
+        <div class="item"><div class="lbl">소요 시간</div><div class="val">60 min</div></div>
+        <div class="item"><div class="lbl">슬라이드</div><div class="val">26 장</div></div>
+        <div class="item"><div class="lbl">권장 인원</div><div class="val">5–20명</div></div>
+        <div class="item"><div class="lbl">대상</div><div class="val">신규·전환자</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning goals -->
+  <section class="section">
+    <div class="section-eyebrow">LEARNING GOALS</div>
+    <h2>이 1시간 안에 가져가실 3가지.</h2>
+    <div class="goals-grid">
+      <div class="goal-card">
+        <div class="goal-num">GOAL 01</div>
+        <h3>ZWCAD 환경을 내 손에 맞춥니다</h3>
+        <p>자동저장, 단축키, 오스냅 등 — 첫날 30분 투자로 1년이 편해지는 핵심 5종 옵션.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">GOAL 02</div>
+        <h3>ZDREAM의 진짜 가치를 봅니다</h3>
+        <p>좌표 입출력 · 다중출력 · 엑셀 연동 — 이미 라이선스에 들어있는 자동화 도구.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">GOAL 03</div>
+        <h3>막힐 때 어디로 연락할지 압니다</h3>
+        <p>LISP 검토 · 신규 제작 · 표준 컨설팅 — BlueTNS 지원 채널을 손에 넣습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Persona -->
+  <section class="section persona-section">
+    <div class="section-eyebrow">FOR YOU</div>
+    <h2>이런 분께 추천합니다.</h2>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-emoji">🆕</div>
+        <h4>신규 입사자</h4>
+        <div class="who">"막 입사해서 ZWCAD를 처음 켜보신 분"</div>
+        <div class="why">환경 셋팅부터 차근차근 — 따라가기 쉽게 설계되어 있어요.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">🔄</div>
+        <h4>전환배치자</h4>
+        <div class="who">"다른 부서에서 CAD를 잡게 되신 분"</div>
+        <div class="why">AutoCAD 사용자 배려 코너 포함 — 기존 단축키 그대로 옮기는 법.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">🔧</div>
+        <h4>ZWCAD 사용자</h4>
+        <div class="who">"쓰고 있지만 ZDREAM은 안 써본 분"</div>
+        <div class="why">FULL 라이선스에 이미 포함된 자동화 도구의 가치를 재발견.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="section">
+    <div class="section-eyebrow">TIMELINE</div>
+    <h2>시간 배분, 한눈에.</h2>
+    <div class="timeline-viz">
+      <div class="timeline-bar">
+        <div class="tl-seg p1"><div class="lbl">PART 1 · 30 MIN</div><div class="ttl">오늘부터 바뀌는 ZWCAD 셋팅</div></div>
+        <div class="tl-seg brk"><div class="ttl">☕</div><div class="lbl" style="color:#1E2A3A; opacity:0.6;">BRUNCH</div></div>
+        <div class="tl-seg p2"><div class="lbl">PART 2 · 30 MIN</div><div class="ttl">ZDREAM이 대신해주는 반복 작업</div></div>
+      </div>
+      <div class="timeline-axis">
+        <div><span>0 min</span><span>30 min</span></div>
+        <div></div>
+        <div><span>~</span><span>60 min</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curriculum -->
+  <section class="section curr-section">
+    <div class="section-eyebrow">CURRICULUM</div>
+    <h2>26장의 슬라이드, 미리 보기.</h2>
+    <p class="sub">항목을 클릭하면 해당 슬라이드부터 시작할 수 있어요.</p>
+
+    <div class="curr-list">
+      <div class="curr-group">
+        <div class="curr-group-head">
+          <span class="gnum">PART 1</span>
+          <span class="gttl">오늘부터 바뀌는 ZWCAD 셋팅</span>
+          <span class="gtime">30 min</span>
+        </div>
+        <div class="curr-items" id="curr-p1"></div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head brk">
+          <span class="gnum">BREAK</span>
+          <span class="gttl">☕ 브런치 휴식</span>
+          <span class="gtime">~ min</span>
+        </div>
+        <div class="curr-items" id="curr-brk"></div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head">
+          <span class="gnum">PART 2</span>
+          <span class="gttl">ZDREAM이 대신해주는 반복 작업</span>
+          <span class="gtime">30 min</span>
+        </div>
+        <div class="curr-items" id="curr-p2"></div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head">
+          <span class="gnum">CLOSING</span>
+          <span class="gttl">마무리 · Q&A</span>
+          <span class="gtime">~ min</span>
+        </div>
+        <div class="curr-items" id="curr-cl"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main CTA -->
+  <section class="cta-section">
+    <a class="start-btn" href="#" onclick="event.preventDefault(); enterSlides();">
+      <div class="play">▶</div>
+      <div class="body">
+        <div class="t1">교육 시작하기</div>
+        <div class="t2">총 26장 / 약 60분 · 키보드 ←/→로 넘기실 수 있어요</div>
+      </div>
+    </a>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="logo"><img src="images/logo-white.png" alt="BlueTNS" style="height:38px;"/></div>
+        <div class="footer-quote" style="margin-top:18px;">"여러분의 효율적인 작업이 저희의 일입니다"</div>
+      </div>
+      <div>
+        <h5>빠른 링크</h5>
+        <ul class="footer-list">
+          <li><a href="#" onclick="event.preventDefault(); showView('hub');">← 허브로 돌아가기</a></li>
+          <li><a href="#" onclick="event.preventDefault(); openContact();">전담 매니저 문의</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>이 코스 정보</h5>
+        <ul class="footer-list">
+          <li>총 26장 · 60분</li>
+          <li>5명 이상 방문 진행</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 BlueTNS. All rights reserved.</div>
+      <div>Course A · 브런치</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================ COURSE A SLIDES ============================ -->
+<div class="view" id="course-a-slides">
+  <div class="slides-topbar">
+    <button class="back" onclick="exitSlides()">← 코스 개요로</button>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <button class="back" onclick="toggleSlideFullscreen()" title="전체화면 (F)" style="margin-right:12px;">⛶ 전체화면</button>
+    <div class="counter"><span class="num" id="curNum">1</span> / 26</div>
+  </div>
+
+  <div class="slides-stage">
+    <div class="slide-frame" id="slideFrame">
+<deck-stage>
+
+<!-- ============================ SLIDE 1 ============================ -->
+<section class="s-cover dark" data-screen-label="01 표지">
+  <div class="grid-bg"></div>
+  <svg class="blueprint" viewBox="0 0 800 800" fill="none" stroke="#FF6B35" stroke-width="1.2">
+    <rect x="80" y="80" width="640" height="640" />
+    <rect x="160" y="160" width="320" height="220" />
+    <rect x="160" y="400" width="200" height="200" />
+    <rect x="400" y="420" width="220" height="180" />
+    <line x1="80" y1="240" x2="720" y2="240" stroke-dasharray="6 8" />
+    <line x1="80" y1="500" x2="720" y2="500" stroke-dasharray="6 8" />
+    <line x1="320" y1="80" x2="320" y2="720" stroke-dasharray="6 8" />
+    <line x1="540" y1="80" x2="540" y2="720" stroke-dasharray="6 8" />
+    <circle cx="160" cy="240" r="6" fill="#FF6B35" />
+    <circle cx="320" cy="500" r="6" fill="#FF6B35" />
+    <circle cx="540" cy="240" r="6" fill="#FF6B35" />
+  </svg>
+  <div class="chrome-top">
+    <div class="section-tag">EA TRAINING <span class="dot">·</span> 2026</div>
+    <div style="font-family:'JetBrains Mono', monospace;">v1.0</div>
+  </div>
+  <div class="content">
+    <div class="eyebrow" style="color:#FF6B35;">신입 · 전환자 입문 교육</div>
+    <h1 style="margin-top:24px;">ZWCAD<br/>첫걸음</h1>
+    <div class="sub"><span class="hl">30분 세팅</span>, <span class="hl">30분 ZDREAM</span> — 평생 가는 효율</div>
+    <div class="timer-pill"><span class="dot"></span>총 60분 / 콘텐츠 24장 + 브레이크</div>
+  </div>
+  <div class="info-row">
+    <div><div class="lbl">일시 · 장소</div>[운영 시 입력]</div>
+    <div><div class="lbl">주관</div>블루티엔에스 · BlueTNS</div>
+    <div><div class="lbl">협력</div>ZWCAD KOREA</div>
+  </div>
+  <div class="chrome-bot">
+    <div class="wordmark"><span class="b"></span>BlueTNS</div>
+    <div class="pageno"><span class="num">01</span> / 26</div>
+  </div>
+</section>
+
+<!-- ============================ SLIDE 2 — agenda ============================ -->
+<section class="s-agenda" data-screen-label="02 목차">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">OPENING <span class="dot">·</span> 목차</div><div class="mono">60 min</div></div>
+  <div style="position:absolute; left:120px; top:140px; right:120px;">
+    <div class="eyebrow">오늘 함께할 시간</div>
+    <h2 style="margin-top:12px;">1시간, 짧지만 단단하게.</h2>
+  </div>
+  <div class="timeline">
+    <div class="agenda-card featured">
+      <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+      <div class="step">PART 1</div>
+      <div class="time">30<span style="font-size:24px; opacity:0.6;"> min</span></div>
+      <h3>오늘부터 바뀌는<br/>ZWCAD 셋팅</h3>
+      <div class="quote">"환경 셋팅 1시간이<br/>1년의 야근을 줄입니다"</div>
+    </div>
+    <div class="agenda-card brunch">
+      <div class="icon" style="background:var(--accent); border-color:var(--accent);"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4z"/><line x1="6" y1="2" x2="6" y2="4"/><line x1="10" y1="2" x2="10" y2="4"/><line x1="14" y1="2" x2="14" y2="4"/></svg></div>
+      <div class="step">BREAK</div>
+      <div class="time">~<span style="font-size:24px; color:var(--muted);"> min</span></div>
+      <h3>☕ 브런치 휴식</h3>
+      <div class="quote">"질문하고, 이야기 나누는 시간"</div>
+    </div>
+    <div class="agenda-card">
+      <div class="icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1E2A3A" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2" ry="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg></div>
+      <div class="step">PART 2</div>
+      <div class="time">30<span style="font-size:24px; opacity:0.6;"> min</span></div>
+      <h3>ZDREAM이<br/>대신해주는 반복 작업</h3>
+      <div class="quote">"FULL 라이선스의 진짜 가치,<br/>오늘 보여드립니다"</div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">02</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 3 — BlueTNS intro ============================ -->
+<section class="s-intro" data-screen-label="03 BlueTNS 소개">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">OPENING <span class="dot">·</span> 소개</div><div class="mono">3 min</div></div>
+  <div style="position:absolute; left:120px; top:140px; right:120px;">
+    <div class="eyebrow">반갑습니다</div>
+    <h2 style="margin-top:12px;">안녕하세요, 블루티엔에스입니다.</h2>
+  </div>
+  <div class="body">
+    <div class="info-card">
+      <h4>회사 정체성</h4>
+      <div class="name">블루티엔에스 <span class="en">BlueTNS</span></div>
+      <div class="feat-list">
+        <div class="row"><div class="ico">①</div><div class="txt">대기업 고객사 전담 IT 솔루션 파트너</div></div>
+        <div class="row"><div class="ico">②</div><div class="txt">ZWCAD 공식 협력사 — 정식 라이선스 · 기술지원</div></div>
+        <div class="row"><div class="ico">③</div><div class="txt">LISP 검토 · 수정 · 신규 개발 지원</div></div>
+      </div>
+    </div>
+    <div class="profile">
+      <h4 style="color:var(--accent); font-size:14px; letter-spacing:0.18em; text-transform:uppercase;">강사 정보</h4>
+      <div style="display:flex; gap:24px; align-items:center; margin-top:20px;">
+        <div class="avatar">B</div>
+        <div>
+          <div style="font-size:28px; font-weight:800; color:var(--primary);">[강사명]</div>
+          <div style="color:var(--muted); margin-top:4px;">[직책 / 담당 영역]</div>
+        </div>
+      </div>
+      <div style="margin-top:24px;">
+        <div class="field"><div class="l">담당 영역</div><div class="v">EA 교육 · 테크니컬 지원</div></div>
+        <div class="field"><div class="l">연락처</div><div class="v">안병현 차장</div></div>
+        <div class="field"><div class="l">메일</div><div class="v">bhahn@bluetns.co.kr</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="slogan"><span class="hl">"여러분의 효율적인 작업이</span> 저희의 일입니다"</div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">03</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 4 — PART 1 divider ============================ -->
+<section class="s-part dark" data-screen-label="04 PART 1 표지">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag" style="color:#fff;">PART 1 <span class="dot">·</span> 환경 셋팅</div><div class="mono">30 min</div></div>
+  <div class="label"><span class="num">PART 01</span><span>/ 30 MIN</span></div>
+  <div class="title"><h1>오늘부터 바뀌는<br/><span style="color:var(--accent);">ZWCAD 셋팅.</span></h1></div>
+  <div class="sub">환경 셋팅 <span class="hl">1시간</span>이<br/><span class="hl">1년의 야근</span>을 줄입니다.</div>
+  <div class="vs-row"><div class="a">1 hour</div><div class="x">→</div><div class="b">1 year saved</div></div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">04</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 5 — interface ============================ -->
+<section class="s5" data-screen-label="05 인터페이스">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 인터페이스</div><div class="mono">3 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">화면 정복</div>
+    <h2>화면, 익숙해지는 데 5분이면 충분합니다.</h2>
+  </div>
+  <div class="body">
+    <div class="points">
+      <div class="point-card"><div class="num">1</div><div><h4>클래식 ↔ 리본 전환</h4><p>우측 하단 톱니바퀴 클릭 한 번으로 전환. 익숙한 모드 그대로.</p></div></div>
+      <div class="point-card"><div class="num">2</div><div><h4>명령행 (Command Line)</h4><p>모든 작업의 중심. <span class="keycap">F2</span> 로 펼쳐서 히스토리 확인.</p></div></div>
+      <div class="point-card"><div class="num">3</div><div><h4>AutoCAD 사용자라면?</h4><p>익숙한 인터페이스 그대로 사용 가능. 학습 곡선 거의 없음.</p></div></div>
+      <div class="switcher" style="margin-top:8px;">
+        <h4 style="font-size:18px; margin-bottom:6px;">💡 신규 사용자 권장</h4>
+        <div style="font-size:17px; color:var(--text); line-height:1.5;"><b>클래식 + 리본 혼합 모드</b> — 메뉴와 도구막대를 동시에 사용</div>
+      </div>
+    </div>
+    <div class="ph-stack">
+      <div class="shot ph-big">
+        <img src="images/ppt/slide5_interface/image5.jpg" alt="ZWCAD 리본 모드 화면">
+        <div class="cap">RIBBON · 리본 모드</div>
+      </div>
+      <div class="shot ph-small">
+        <img src="images/ppt/slide5_interface/image6.jpg" alt="ZWCAD 클래식 모드 화면">
+        <div class="cap">CLASSIC · 클래식 모드</div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">05</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 6 — 5 options intro ============================ -->
+<section class="s6" data-screen-label="06 5대 옵션 인트로">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 5대 옵션</div><div class="mono">1 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">FIRST DAY CHECKLIST</div>
+    <h2>회사 PC 받자마자, 이 5가지부터.</h2>
+  </div>
+  <div class="body">
+    <div class="lead">30분 투자로 1년이 편해지는 ZWCAD 옵션 <b style="color:var(--accent);">5선</b></div>
+    <div class="grid">
+      <div class="opt-card"><div class="num-badge">1</div><div class="ico-circle"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1E2A3A" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><h4>자동 저장</h4><p>5~10분 간격으로 작업 자동 백업</p><span class="tag">5–10 MIN</span></div>
+      <div class="opt-card"><div class="num-badge">2</div><div class="ico-circle"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1E2A3A" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></div><h4>백업 파일</h4><p>저장 시마다 .bak 자동 생성</p><span class="tag">.BAK</span></div>
+      <div class="opt-card"><div class="num-badge">3</div><div class="ico-circle"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1E2A3A" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><h4>저장 형식</h4><p>AutoCAD 2018 — 협력사 호환</p><span class="tag">2018 .DWG</span></div>
+      <div class="opt-card"><div class="num-badge">4</div><div class="ico-circle"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1E2A3A" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg></div><h4>인터페이스 색상</h4><p>검정 배경 — 눈 피로 감소</p><span class="tag">DARK</span></div>
+      <div class="opt-card"><div class="num-badge">5</div><div class="ico-circle"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#1E2A3A" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><polyline points="9 14 12 11 15 14"/></svg></div><h4>MOVEBAK</h4><p>백업 파일 경로 분리 — 폴더 정리</p><span class="tag">CMD</span></div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">06</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 7 — options 1-3 ============================ -->
+<section class="s78" data-screen-label="07 옵션 1-3">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 5대 옵션 ①②③</div><div class="mono">2 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">DATA SAFETY</div>
+    <h2>데이터를 지키는 3가지 셋팅.</h2>
+  </div>
+  <div class="body">
+    <div class="opt-list">
+      <div class="opt-detail">
+        <div class="head"><div class="num">1</div><h4>자동 저장</h4></div>
+        <div class="row"><div class="l">위치</div><div class="v">옵션 → 열기 및 저장 → 파일 안전 예방 조치</div></div>
+        <div class="row"><div class="l">권장</div><div class="v reco">5~10분 간격, ON</div></div>
+        <div class="row"><div class="l">이유</div><div class="v why">현장 정전·강제 종료에도 작업 보호</div></div>
+      </div>
+      <div class="opt-detail">
+        <div class="head"><div class="num">2</div><h4>백업 파일 (.bak)</h4></div>
+        <div class="row"><div class="l">위치</div><div class="v">옵션 → 열기 및 저장 → 파일 안전 예방 조치</div></div>
+        <div class="row"><div class="l">권장</div><div class="v reco">"저장할 때마다 백업본 작성" ON</div></div>
+        <div class="row"><div class="l">이유</div><div class="v why">직전 버전 즉시 복구 가능</div></div>
+      </div>
+      <div class="opt-detail">
+        <div class="head"><div class="num">3</div><h4>저장 형식</h4></div>
+        <div class="row"><div class="l">위치</div><div class="v">옵션 → 열기 및 저장 → 파일 저장</div></div>
+        <div class="row"><div class="l">권장</div><div class="v reco">AutoCAD 2018 형식</div></div>
+        <div class="row"><div class="l">이유</div><div class="v why">발주처·협력사가 구버전 사용해도 호환</div></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="shot light" style="height:360px;">
+        <img src="images/ppt/slide7_save/image43.jpg" alt="옵션 - 열기 및 저장 다이얼로그" style="max-height:340px;">
+        <div class="cap dark-cap">옵션 → 열기 및 저장</div>
+      </div>
+      <div class="full-tip">💡 자동저장 파일(<span class="mono">.zw$</span>)은 정상 종료 시 자동 삭제. <b>이상 종료 시에만 남아 복구 가능</b>합니다.</div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">07</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 8 — options 4-5 ============================ -->
+<section class="s78" data-screen-label="08 옵션 4-5">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 5대 옵션 ④⑤</div><div class="mono">2 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">WORKSPACE COMFORT</div>
+    <h2>일하기 편한 환경, 깔끔한 폴더.</h2>
+  </div>
+  <div class="body">
+    <div class="opt-list">
+      <div class="opt-detail">
+        <div class="head"><div class="num">4</div><h4>인터페이스 색상</h4></div>
+        <div class="row"><div class="l">위치</div><div class="v">옵션 → 표시 → 윈도우 요소</div></div>
+        <div class="row"><div class="l">권장</div><div class="v reco">검정 배경 (Dark)</div></div>
+        <div class="row"><div class="l">이유</div><div class="v why">장시간 작업 시 눈 피로 감소</div></div>
+      </div>
+      <div class="opt-detail">
+        <div class="head"><div class="num">5</div><h4>MOVEBAK — 백업 경로 분리</h4></div>
+        <div class="row"><div class="l">명령</div><div class="v"><span class="code light">MOVEBAK</span> 입력 후 폴더 지정</div></div>
+        <div class="row"><div class="l">권장</div><div class="v reco">백업 폴더 별도 분리 — 예: <span class="mono">D:\ZWCAD_Backup</span></div></div>
+        <div class="row"><div class="l">이유</div><div class="v why">작업 폴더가 .bak 파일로 지저분해지지 않음</div></div>
+      </div>
+      <div class="full-warn">
+        <b>💡 사고 대응 — 자동저장 파일 위치 미리 알아두기</b><br/>
+        기본 경로: <span class="mono" style="background:#fff; padding:2px 8px; border-radius:4px;">C:\Users\사용자명\AppData\Local\Temp</span><br/>
+        사고 발생 시 <span class="mono">.zw$</span> → <span class="mono">.dwg</span> 확장자 변경하면 복구 가능
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="shot light" style="height:280px;">
+        <img src="images/ppt/slide8_color_movebak/image49.jpg" alt="옵션 - 표시 탭 색상 개요" style="max-height:262px;">
+        <div class="cap dark-cap">옵션 ④ · 색상 개요 "어두움"</div>
+      </div>
+      <div class="shot" style="height:280px; padding:18px;">
+        <img src="images/ppt/slide8_color_movebak/image46.jpg" alt="MOVEBAK 명령행 실행 결과">
+        <div class="cap">옵션 ⑤ · MOVEBAK 명령행</div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">08</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 9 — shortcuts ============================ -->
+<section class="s9" data-screen-label="09 단축키">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 단축키</div><div class="mono">5 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">SHORTCUTS</div>
+    <h2>단축키, 한 번만 잡으면 평생 갑니다.</h2>
+  </div>
+  <div class="body">
+    <div class="method-row">
+      <div class="method-card">
+        <div class="lbl">METHOD 01</div>
+        <h4>.pgp 파일 직접 편집</h4>
+        <div class="step">메뉴: <b>도구 → 사용자 지정 → 편집과 프로그램 매개변수</b><br/>메모장 형태로 단축키 ↔ 명령어 편집</div>
+        <div class="pro">✓ 일괄 복사·붙여넣기로 빠른 마이그레이션</div>
+      </div>
+      <div class="method-card">
+        <div class="lbl">METHOD 02</div>
+        <h4>ALIASEDIT (GUI 편집)</h4>
+        <div class="step">메뉴: <b>Express → 도구 → 명령 단축키 편집</b><br/>명령어: <span class="code light">ALIASEDIT</span></div>
+        <div class="pro">✓ 검색·내보내기·가져오기 편리</div>
+      </div>
+    </div>
+    <div class="lower">
+      <div class="full-tip" style="display:flex; flex-direction:column; gap:10px;">
+        <b>💡 현재 단축키 파일 위치 즉시 찾기</b>
+        <div>명령행에 입력 → 결과 경로가 즉시 표시됩니다.</div>
+        <div><span class="code">(findfile "zwcad.pgp")</span></div>
+      </div>
+      <div class="switcher">
+        <h4 style="font-size:18px;">⚡ AutoCAD에서 ZWCAD로 전환하셨나요?</h4>
+        <div style="font-size:16px; color:var(--text); line-height:1.55; margin-top:10px;">
+          기존 <span class="mono">acad.pgp</span> 파일의 내용을 복사 →<br/>
+          <span class="mono">zwcad.pgp</span>에 붙여넣으면 <b>끝.</b><br/>
+          <i style="color:var(--muted);">— 익숙한 단축키 그대로 사용 가능</i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">09</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 10 — osnap ============================ -->
+<section class="s10" data-screen-label="10 객체 스냅">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 객체 스냅</div><div class="mono">6 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">OBJECT SNAP — 정확성의 핵심</div>
+    <h2>자동 오스냅, <span style="color:var(--accent);">적게 켤수록 정확합니다.</span></h2>
+  </div>
+  <div class="body">
+    <div class="osnap-hero">
+      <div style="font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.18em; color:var(--accent);">RECOMMENDED</div>
+      <h4 style="font-size:32px; margin-top:8px;">이 3개만 자동 ON</h4>
+      <div class="three">
+        <div class="pill"><div class="key">End</div><div class="desc">끝점<br/>선·호의 끝</div></div>
+        <div class="pill"><div class="key">Int</div><div class="desc">교차점<br/>선과 선이 만나는 점</div></div>
+        <div class="pill"><div class="key">Cen</div><div class="desc">중심<br/>원·호의 중심</div></div>
+      </div>
+      <div class="full-warn" style="margin-top:24px; background:rgba(220,53,69,0.15); border-left-color:var(--danger); color:#fff;">
+        <b style="color:#fff;">⚠️ Mid를 자동 ON으로 두면 위험합니다.</b><br/>
+        <span style="color:rgba(255,255,255,0.85);">선 중간점 근처에 다른 선이 지나면, 의도한 <b>Int</b> 대신 <b>Mid</b>가 잡혀<br/>시공도에서 미세하게 틀어진 선이 누적되어 큰 오류로.</span>
+      </div>
+    </div>
+    <div>
+      <div class="opt-table">
+        <div class="row head"><div class="k">입력</div><div class="v">필요할 때만 명령 중간에</div></div>
+        <div class="row"><div class="k">mid</div><div class="v">중간점 (Midpoint)</div></div>
+        <div class="row"><div class="k">per</div><div class="v">직각 (Perpendicular)</div></div>
+        <div class="row"><div class="k">qua</div><div class="v">사분점 (Quadrant)</div></div>
+        <div class="row"><div class="k">non</div><div class="v">오스냅 끄기 (None)</div></div>
+      </div>
+      <div class="shot light" style="height:240px; margin-top:18px; padding:14px;">
+        <img src="images/ppt/slide10_osnap/image55.jpg" alt="객체 스냅 모드 설정 다이얼로그" style="max-height:212px;">
+        <div class="cap dark-cap">제도 설정 → 객체 스냅</div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">10</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 11 — turn off F-keys ============================ -->
+<section class="s11" data-screen-label="11 보조도구 끄기">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 보조도구</div><div class="mono">4 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">TURN IT OFF</div>
+    <h2>끄세요. 작업이 더 정확해집니다.</h2>
+  </div>
+  <div class="body">
+    <div class="fkey-list">
+      <div class="fkey-row"><div class="key"><span class="keycap lg">F12</span><span class="x">OFF</span></div><div class="name">동적 입력</div><div class="why">시각적 혼란, 자원 소모</div></div>
+      <div class="fkey-row"><div class="key"><span class="keycap lg">F10</span><span class="x">OFF</span></div><div class="name">극좌표 추적</div><div class="why">가상 연장선 추적 → 미세 어긋남 유발</div></div>
+      <div class="fkey-row"><div class="key"><span class="keycap lg">F11</span><span class="x">OFF</span></div><div class="name">객체 스냅 추적</div><div class="why">위와 동일 — 미세 어긋남 누적</div></div>
+      <div class="fkey-row"><div class="key"><span class="code light" style="font-size:14px;">UCSDETECT 0</span></div><div class="name">동적 UCS</div><div class="why">2D 작업에서 불필요</div></div>
+      <div class="full-tip">💡 <b>건설 도면은 정확성이 생명.</b> 화려한 보조 기능보다, 단축키로 좌표를 직접 입력하는 것이 가장 빠르고 정확합니다.</div>
+    </div>
+    <div class="keyboard-art">
+      <div style="font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.14em; color:var(--accent); margin-bottom:18px;">FUNCTION ROW</div>
+      <div class="row">
+        <div class="k">Esc</div><div class="k">F1</div><div class="k">F2</div><div class="k">F3</div><div class="k">F4</div><div class="k">F5</div><div class="k">F6</div><div class="k">F7</div><div class="k">F8</div><div class="k">F9</div><div class="k off">F10</div><div class="k off">F11</div><div class="k off">F12</div>
+      </div>
+      <div style="margin-top:24px; font-size:14px; color:rgba(255,255,255,0.7); line-height:1.6;">
+        화면 하단 <b style="color:#fff;">상태 표시줄</b>에서<br/>한 번에 토글 가능합니다.
+      </div>
+      <div style="margin-top:18px; padding:14px 18px; background:rgba(255,255,255,0.05); border-radius:10px; font-family:'JetBrains Mono', monospace; font-size:13px; color:rgba(255,255,255,0.85);">
+        $ <span style="color:var(--accent);">UCSDETECT</span> ↵ → <span style="color:var(--accent);">0</span>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">11</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 12 — migration ============================ -->
+<section class="s12" data-screen-label="12 마이그레이션">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 사용자 설정 마이그레이션</div><div class="mono">3 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">MIGRATION</div>
+    <h2>본사 PC ↔ 현장 PC, 5분이면 똑같이.</h2>
+  </div>
+  <div class="body">
+    <div class="scenario-bubble">
+      <div class="ico">🏗️</div>
+      <div class="txt">"현장사무소 PC가 새로 왔어요. 처음부터 다시 셋팅하나요?"<br/><span class="a">답: 아닙니다. 5분이면 끝납니다.</span></div>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-no">STEP 01</div>
+        <h4>기존 PC에서 내보내기</h4>
+        <p>Windows 시작 메뉴 → ZWCAD 폴더 → "ZWCAD 설정 내보내기" → 바탕화면에 압축 파일 생성</p>
+        <div class="arrow">→</div>
+      </div>
+      <div class="step-card">
+        <div class="step-no">STEP 02</div>
+        <h4>새 PC로 복사</h4>
+        <p>USB / 네트워크 드라이브 / 메일 첨부 — 어떤 방법이든 OK</p>
+        <div class="arrow">→</div>
+      </div>
+      <div class="step-card">
+        <div class="step-no">STEP 03</div>
+        <h4>새 PC에서 가져오기</h4>
+        <p>Windows 시작 메뉴 → ZWCAD 폴더 → "ZWCAD 설정 가져오기" → 압축 파일 선택</p>
+      </div>
+    </div>
+    <div class="full-tip" style="margin-top:36px;">
+      <b>📦 포함되는 항목</b> — 단축키(.pgp), 옵션 설정, 인터페이스, 사용자 정의 메뉴, 플롯 스타일 등
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">12</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 13 — Part 1 recap ============================ -->
+<section class="s13" data-screen-label="13 PART 1 요약">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 1 <span class="dot">·</span> 핵심 요약</div><div class="mono">1 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">PART 1 RECAP</div>
+    <h2>30분 안에 이만큼 챙겼습니다.</h2>
+  </div>
+  <div class="body">
+    <div class="check-list">
+      <div class="item"><div class="check">✓</div><div>자동 저장 + 백업 + 저장 형식</div></div>
+      <div class="item"><div class="check">✓</div><div>인터페이스 색상 + MOVEBAK 경로 분리</div></div>
+      <div class="item"><div class="check">✓</div><div>단축키 — <span class="mono" style="background:#fff; padding:2px 6px; border-radius:4px; font-size:14px;">(findfile "zwcad.pgp")</span></div></div>
+      <div class="item"><div class="check">✓</div><div>오스냅 — End / Int / Cen 만 ON</div></div>
+      <div class="item"><div class="check">✓</div><div>동적 입력·추적 OFF (F10 / F11 / F12)</div></div>
+      <div class="item"><div class="check">✓</div><div>사용자 설정 마이그레이션 — 5분</div></div>
+    </div>
+    <div class="big-msg">
+      <div class="quote">"이 셋팅을 한 사람과<br/>안 한 사람의 <span class="hl">1년 후</span><br/>차이를 느끼게 됩니다."</div>
+      <div class="sub">— 환경 셋팅은 단 한 번, 효과는 매일.</div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">13</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 14 — break ============================ -->
+<section class="s-break" data-screen-label="14 브런치">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">BREAK <span class="dot">·</span> 브런치</div><div class="mono">~ min</div></div>
+  <div class="pad">
+    <div class="cup">☕</div>
+    <h1>잠깐, 브런치 타임.</h1>
+    <div class="sub">편하게 드시면서, 궁금하셨던 것 자유롭게 질문해 주세요.</div>
+    <div class="timer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF6B35" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>PART 2는 [시간] 후 이어집니다</div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">14</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 15 — PART 2 divider ============================ -->
+<section class="s-part dark" data-screen-label="15 PART 2 표지">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag" style="color:#fff;">PART 2 <span class="dot">·</span> ZDREAM</div><div class="mono">30 min</div></div>
+  <div class="label"><span class="num">PART 02</span><span>/ 30 MIN</span></div>
+  <div class="title"><h1>ZDREAM이<br/><span style="color:var(--accent);">대신해주는</span><br/>반복 작업.</h1></div>
+  <div class="sub">FULL 라이선스의 <span class="hl">진짜 가치</span>,<br/>오늘 보여드립니다.</div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">15</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 16 — ZDREAM intro ============================ -->
+<section class="s16" data-screen-label="16 ZDREAM 소개">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> ZDREAM 소개</div><div class="mono">2 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">ALREADY YOURS</div>
+    <h2>ZDREAM, 이미 여러분 라이선스에 들어있습니다.</h2>
+  </div>
+  <div class="body">
+    <div class="gift-box">
+      <div class="ribbon">INCLUDED</div>
+      <div class="lbl">ZWCAD FULL 라이선스 한정</div>
+      <div class="name">ZDREAM</div>
+      <div class="desc">범용 유틸리티부터 CIVIL 전용까지 —<br/>건설 현장이 필요한 자동화 명령이 한 묶음에.</div>
+    </div>
+    <div class="fact-grid">
+      <div class="fact-card"><div class="num">① FEATURES</div><div class="v">400+</div><div class="d">범용 유틸리티 + CIVIL 기능 포함</div></div>
+      <div class="fact-card"><div class="num">② LICENSE</div><div class="v">FULL</div><div class="d">여러분이 이미 사용 중인 그 라이선스</div></div>
+      <div class="fact-card"><div class="num">③ UPDATE</div><div class="v">매월</div><div class="d">신기능 추가 + 고객 피드백 반영</div></div>
+      <div class="fact-card"><div class="num">④ COST</div><div class="v">₩ 0</div><div class="d">별도 비용 없음 — 무상 제공</div></div>
+    </div>
+  </div>
+  <div class="full-tip" style="position:absolute; left:120px; right:120px; bottom:120px;">💡 ZDREAM을 안 쓴다는 건, <b>"이미 산 자동화 도구를 그냥 두고 있다"는 뜻입니다.</b></div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">16</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 17 — coords intro ============================ -->
+<section class="s17" data-screen-label="17 좌표 다루기 인트로">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> ⭐ 좌표 다루기</div><div class="mono">1 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">CIVIL CORE</div>
+    <h2>측량팀에서 받은 엑셀 좌표, 어떻게 도면에 옮기시나요?</h2>
+  </div>
+  <div class="body">
+    <div class="ba">
+      <div class="ba-box bad">
+        <div class="tag">❌ BEFORE</div>
+        <h4>손으로 하나씩</h4>
+        <ul>
+          <li>좌표값 보고 점 찍기 반복</li>
+          <li>100개 좌표 = 100번 클릭</li>
+          <li>오타 / 누락 위험</li>
+          <li>검수에 또 시간 소요</li>
+        </ul>
+        <div style="margin-top:24px; padding:14px 18px; background:#fff; border-radius:8px; font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--danger);">
+          ⏱ 평균 소요 ~ 2 hrs
+        </div>
+      </div>
+      <div class="ba-arrow">
+        <div class="lbl">ZDREAM</div>
+        <div class="a">→</div>
+        <div class="lbl">CIM / CEX</div>
+      </div>
+      <div class="ba-box good">
+        <div class="tag">✅ AFTER</div>
+        <h4>엑셀 → 드래그 → 자동</h4>
+        <ul>
+          <li>엑셀 데이터 그대로 가져오기</li>
+          <li>100개 좌표 = 클릭 한 번</li>
+          <li>정확성 보장 — 오타 0</li>
+          <li>역방향(도면 → 엑셀)도 OK</li>
+        </ul>
+        <div style="margin-top:24px; padding:14px 18px; background:#fff; border-radius:8px; font-family:'JetBrains Mono', monospace; font-size:14px; color:var(--success);">
+          ⏱ 평균 소요 ~ 1 min
+        </div>
+      </div>
+    </div>
+    <div class="next-up">
+      <div class="next-pill"><div class="cmd">CIM</div><div class="desc">엑셀 좌표<br/>→ 도면</div></div>
+      <div class="next-pill"><div class="cmd">CEX</div><div class="desc">도면 좌표<br/>→ 엑셀</div></div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">17</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 18 — CIM ============================ -->
+<section class="s1819" data-screen-label="18 CIM">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> CIM</div><div class="mono">4 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">EXCEL → CAD</div>
+    <h2>CIM — 좌표 가져오기.</h2>
+  </div>
+  <div class="body">
+    <div class="cmd-hero">
+      <div class="cmd-row"><div class="cmd-name">CIM</div><div class="cmd-desc">Coordinate IMport</div></div>
+      <div class="summary">엑셀·텍스트 파일의 좌표(X, Y, Z)를<br/>CAD에 점/선으로 자동 작성.</div>
+      <div class="three-step">
+        <div class="step"><div class="n">STEP 01</div><div class="h">명령어 입력</div><div class="d">명령행에 <span style="color:var(--accent); font-family:monospace;">CIM</span> ↵</div></div>
+        <div class="step"><div class="n">STEP 02</div><div class="h">옵션 선택</div><div class="d">위치 / 절점(Point·Line·Pline) / 문자 표시 / 연결선 / Z값</div></div>
+        <div class="step"><div class="n">STEP 03</div><div class="h">엑셀 데이터 범위 선택 → 확인</div><div class="d">선택 범위가 즉시 도면에 작성</div></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="shot light" style="height:300px; padding:14px;">
+        <img src="images/ppt/slide18_cim/image117.png" alt="CIM 좌표 가져오기 다이얼로그" style="max-height:272px;">
+        <div class="cap dark-cap">CIM · 좌표 가져오기</div>
+      </div>
+      <div class="scenario-list">
+        <h4>건설 활용</h4>
+        <div class="item"><div class="ico">📐</div><div class="txt">측량 좌표 일괄 도면화</div></div>
+        <div class="item"><div class="ico">📐</div><div class="txt">종/횡단면 작도용 점 데이터 입력</div></div>
+        <div class="item"><div class="ico">📐</div><div class="txt">BM(기준점) 자동 표기</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">18</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 19 — CEX ============================ -->
+<section class="s1819" data-screen-label="19 CEX">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> CEX</div><div class="mono">3 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">CAD → EXCEL</div>
+    <h2>CEX — 좌표 내보내기.</h2>
+  </div>
+  <div class="body">
+    <div class="cmd-hero">
+      <div class="cmd-row"><div class="cmd-name">CEX</div><div class="cmd-desc">Coordinate EXport</div></div>
+      <div class="summary">CAD에 작성된 객체의 정점 좌표를<br/>엑셀로 자동 추출.</div>
+      <div class="three-step">
+        <div class="step"><div class="n">STEP 01</div><div class="h">명령어 입력</div><div class="d">명령행에 <span style="color:var(--accent); font-family:monospace;">CEX</span> ↵</div></div>
+        <div class="step"><div class="n">STEP 02</div><div class="h">옵션 선택</div><div class="d">객체(점·선·폴리선) / 좌표계 <b>토목·수학</b> / 출력(Excel·Text) / 소수점</div></div>
+        <div class="step"><div class="n">STEP 03</div><div class="h">객체 선택 → 파일 저장</div><div class="d">선택 객체 좌표가 즉시 엑셀로</div></div>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      <div class="shot light" style="height:300px; padding:14px;">
+        <img src="images/ppt/slide19_cex/image122.png" alt="CEX 좌표 내보내기 다이얼로그" style="max-height:272px;">
+        <div class="cap dark-cap">CEX · 좌표 내보내기</div>
+      </div>
+      <div class="scenario-list">
+        <h4>건설 활용</h4>
+        <div class="item"><div class="ico">📊</div><div class="txt">준공 좌표 보고서 자동 작성</div></div>
+        <div class="item"><div class="ico">📊</div><div class="txt">좌표 검수서 작성</div></div>
+        <div class="item"><div class="ico">📊</div><div class="txt">측량성과 데이터 추출</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">19</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 20 — MPL ============================ -->
+<section class="s20 dark" data-screen-label="20 MPL 다중출력">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag" style="color:#fff;">PART 2 <span class="dot">·</span> ⭐ MPL</div><div class="mono">7 min</div></div>
+  <div class="head">
+    <div class="eyebrow">PART 2 HIGHLIGHT</div>
+    <h2>MPL — 다중 출력. <span style="color:var(--accent);">퇴근 시간을 바꿉니다.</span></h2>
+  </div>
+  <div class="body">
+    <div class="impact-box">
+      <div class="quote">🏗️ 현장 시공도 <span class="hl">100장</span>,<br/><span class="hl">일괄 PDF</span> 변환.</div>
+      <div class="compare">
+        <div class="pill a">PLOT × 100 click</div>
+        <div class="pill b">MPL × 1 click</div>
+      </div>
+      <div style="margin-top:32px; font-size:18px; color:rgba(255,255,255,0.75); line-height:1.6;">
+        "오늘 안에 못 끝낼 것 같던 출력 작업이<br/>한 번의 클릭으로 끝나는 경험."
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.18em; color:var(--accent); margin-bottom:14px;">8대 옵션</div>
+      <div class="opt-8">
+        <div class="o"><div class="n">1</div><div class="t">프린터<span>출력 장치 선택</span></div></div>
+        <div class="o"><div class="n">2</div><div class="t">도면 목록<span>다중 도면 선택</span></div></div>
+        <div class="o"><div class="n">3</div><div class="t">플롯 영역<span>도곽 자동 인식</span></div></div>
+        <div class="o"><div class="n">4</div><div class="t">플롯 스타일<span>흑백 / 컬러</span></div></div>
+        <div class="o"><div class="n">5</div><div class="t">정렬<span>출력 순서</span></div></div>
+        <div class="o"><div class="n">6</div><div class="t">파일 출력<span>PDF / 이미지</span></div></div>
+        <div class="o"><div class="n">7</div><div class="t">옵션<span>음영 / 플롯 / 출력</span></div></div>
+        <div class="o"><div class="n">8</div><div class="t">출력<span>실행</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="scenario-bottom">
+    <div class="s">📁 폴더 내 모든 .dwg 일괄 PDF</div>
+    <div class="s">📁 1개 파일 내 여러 도곽 일괄 출력</div>
+    <div class="s">📁 공정별·층별 도면 묶음 일괄 변환</div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">20</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 21 — ETC ============================ -->
+<section class="s21" data-screen-label="21 ETC 양방향">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> ⭐ ETC</div><div class="mono">5 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">EXCEL ↔ CAD</div>
+    <h2>ETC — 엑셀과 CAD, 자유롭게 오가다.</h2>
+  </div>
+  <div class="body">
+    <div class="dir-card">
+      <div class="dir-tag">◀ EXCEL → CAD</div>
+      <div class="dir-title">엑셀 표를 CAD로</div>
+      <div class="pt"><div class="b">·</div><div class="t">엑셀 표를 CAD에 삽입</div></div>
+      <div class="pt"><div class="b">·</div><div class="t">단, 테이블이 아닌 <b>선 객체</b>로 생성</div></div>
+      <div class="pt"><div class="b">·</div><div class="t">문자/선 레이어를 자동 분리</div></div>
+      <div class="use">활용: <b>자재 수량표</b>, <b>일위대가표</b> 도면 삽입</div>
+      <div class="shot light" style="height:140px; margin-top:18px; padding:8px;">
+        <img src="images/ppt/slide21_etc/image108.png" alt="엑셀 표를 캐드로 다이얼로그" style="max-height:124px;">
+        <div class="cap dark-cap">엑셀 표 → CAD</div>
+      </div>
+    </div>
+    <div class="swap-arrow">
+      <div class="ring">↔</div>
+    </div>
+    <div class="dir-card">
+      <div class="dir-tag">CAD → EXCEL ▶</div>
+      <div class="dir-title">CAD 표를 엑셀로</div>
+      <div class="pt"><div class="b">·</div><div class="t">CAD 표를 엑셀로 추출</div></div>
+      <div class="pt"><div class="b">·</div><div class="t">단, CAD 표가 <b>선 객체</b>로 작성되어 있어야 함</div></div>
+      <div class="pt"><div class="b">·</div><div class="t">셀 병합 · 정렬 자동 인식</div></div>
+      <div class="use">활용: <b>도면 수량 → 산출서</b> 작성</div>
+      <div class="shot light" style="height:140px; margin-top:18px; padding:8px;">
+        <img src="images/ppt/slide21_etc/image113.png" alt="캐드 표를 엑셀로 다이얼로그" style="max-height:124px;">
+        <div class="cap dark-cap">CAD 표 → 엑셀</div>
+      </div>
+    </div>
+  </div>
+  <div class="common-opts">
+    <div class="o"><div class="d"></div>문자 설정 — 레이어 / 높이 / 공백</div>
+    <div class="o"><div class="d"></div>표 레이어 설정</div>
+    <div class="o"><div class="d"></div>CAD ↔ 엑셀 데이터 동기화</div>
+    <div class="o"><div class="d"></div>설정 저장</div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">21</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 22 — efficiency ============================ -->
+<section class="s22" data-screen-label="22 효율 도구">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> 효율 도구</div><div class="mono">3 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">SMALL TOOLS, BIG WINS</div>
+    <h2>작은 차이가 하루를 바꿉니다.</h2>
+  </div>
+  <div class="body">
+    <div class="tool-grid">
+      <div class="tool-card"><span class="badge">DIM</span><div class="cmd">ADI</div><div class="ttl">치수 자동 삽입</div><div class="desc">객체 일괄 선택 → 치수 자동 작성</div></div>
+      <div class="tool-card"><span class="badge">CALC</span><div class="cmd">CALC</div><div class="ttl">캐드 계산기</div><div class="desc">객체 선택만으로 면적·길이 즉시 계산</div></div>
+      <div class="tool-card"><span class="badge">COPY</span><div class="cmd">ICO</div><div class="ttl">증분 복사</div><div class="desc">OFFSET과 달리 <b>블록도 가능</b></div></div>
+      <div class="tool-card"><span class="badge">TEXT</span><div class="cmd">APT</div><div class="ttl">머리말/꼬리말</div><div class="desc">모든 치수에 "mm" 일괄 추가</div></div>
+      <div class="tool-card"><span class="badge">TEXT</span><div class="cmd">TSW</div><div class="ttl">문자 내용 바꾸기</div><div class="desc">두 문자 위치 교환 (Text Swap)</div></div>
+      <div class="tool-card"><span class="badge">TEXT</span><div class="cmd">CR</div><div class="ttl">가운데 정렬</div><div class="desc">사각형 안에 문자 자동 정렬</div></div>
+    </div>
+    <div class="full-tip" style="margin-top:36px;">💡 이 외에도 <b>ZDREAM 명령어 400+</b> — 자주 쓰는 것부터 손에 익히세요. 부록 자료에 BEST 20 정리되어 있습니다.</div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">22</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 23 — LISP ============================ -->
+<section class="s23" data-screen-label="23 LISP 지원">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">PART 2 <span class="dot">·</span> LISP 지원</div><div class="mono">2 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">LISP SUPPORT</div>
+    <h2>LISP, 막히면 저희에게 알려주세요.</h2>
+  </div>
+  <div class="body">
+    <div>
+      <div style="font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.14em; color:var(--accent); margin-bottom:14px; font-weight:700;">기본 사용법</div>
+      <div class="lisp-steps">
+        <div class="lisp-step"><div class="n">1</div><div><div class="h">APPLOAD 명령어 입력</div><div class="d">명령행에 <span class="mono" style="background:var(--bg-soft); padding:2px 6px; border-radius:4px;">APPLOAD</span> ↵</div></div></div>
+        <div class="lisp-step"><div class="n">2</div><div><div class="h">.lsp 파일 추가 → 로드</div><div class="d">1회 로드 = "로드" / 자동 로드 = "시작 세트 추가"</div></div></div>
+        <div class="lisp-step"><div class="n">3</div><div><div class="h">명령어로 사용</div><div class="d">로드된 LISP의 명령어 입력 → 실행</div></div></div>
+      </div>
+      <div class="full-warn" style="margin-top:20px;">
+        <b>🔒 암호화 LISP (.fas / .vlx)</b><br/>
+        ZWCAD KOREA Converter로 변환 후 사용. 파일 받으시면 <b>BlueTNS로 문의</b>.
+      </div>
+    </div>
+    <div class="service-box">
+      <div style="font-family:'JetBrains Mono', monospace; font-size:13px; letter-spacing:0.14em; color:var(--accent); font-weight:700;">BlueTNS 기술 지원</div>
+      <h4>막히면, 라이선스에 포함된 지원이 있습니다.</h4>
+      <ul>
+        <li><div class="ck">✓</div>LISP 작동 검토 및 수정</li>
+        <li><div class="ck">✓</div>결과값이 다르게 나올 때 원인 분석</li>
+        <li><div class="ck">✓</div>신규 LISP 제작 협의</li>
+        <li><div class="ck">✓</div>회사 표준 자동화 도구 컨설팅</li>
+      </ul>
+      <div class="note">"라이선스 안에 이미 포함된 지원입니다. 편하게 연락 주세요."</div>
+    </div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">23</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 24 — recap ============================ -->
+<section class="s24" data-screen-label="24 종합 요약">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">CLOSING <span class="dot">·</span> 종합 요약</div><div class="mono">2 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">FULL RECAP</div>
+    <h2>1시간, 이만큼 챙기셨습니다.</h2>
+  </div>
+  <div class="body">
+    <div class="recap-col">
+      <h4>PART 1 — 셋팅 5종</h4>
+      <div class="it"><div class="ico">✓</div>자동저장 + 백업 + 저장 형식</div>
+      <div class="it"><div class="ico">✓</div>인터페이스 색상 + MOVEBAK</div>
+      <div class="it"><div class="ico">✓</div>단축키 마이그레이션 (.pgp)</div>
+      <div class="it"><div class="ico">✓</div>오스냅 — End / Int / Cen</div>
+      <div class="it"><div class="ico">✓</div>동적 입력·추적 OFF</div>
+    </div>
+    <div class="recap-col p2">
+      <h4>PART 2 — ZDREAM 핵심</h4>
+      <div class="it"><div class="ico">⭐</div><b>CIM / CEX</b>&nbsp;— 좌표 입출력</div>
+      <div class="it"><div class="ico">⭐</div><b>MPL</b>&nbsp;— 다중 출력</div>
+      <div class="it"><div class="ico">⭐</div><b>ETC</b>&nbsp;— 엑셀 ↔ CAD</div>
+      <div class="it"><div class="ico">🛠</div><b>APPLOAD</b> + LISP 기본</div>
+      <div class="it"><div class="ico">📞</div>막히면 <b>BlueTNS</b></div>
+    </div>
+  </div>
+  <div class="center-msg">
+    <div class="q1">"오늘 배운 셋팅, 내일 출근하시면 <span class="hl">30분만</span> 투자해 주세요."</div>
+    <div class="q2">"이번 주 안에 ZDREAM 한 가지만 써보세요."</div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">24</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 25 — channels ============================ -->
+<section class="s25" data-screen-label="25 지원 채널">
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag">CLOSING <span class="dot">·</span> 지원 채널</div><div class="mono">1 min</div></div>
+  <div class="slide-head">
+    <div class="eyebrow">SUPPORT CHANNELS</div>
+    <h2>막히는 일이 생기면, 언제든.</h2>
+  </div>
+  <div class="body">
+    <div class="ch-card featured">
+      <div class="ico-big">📞</div>
+      <h4>전담 매니저</h4>
+      <p style="color:rgba(255,255,255,0.7); font-size:15px; line-height:1.5;">고객사별 전담 매니저 — 기술 문의 · 라이선스 · 교육 요청</p>
+      <div class="l">담당자</div><div class="v">안병현 차장</div>
+      <div class="l">이메일</div><div class="v">bhahn@bluetns.co.kr</div>
+      <div class="l">연락처</div><div class="v">010-6437-4963</div>
+    </div>
+    <div class="ch-card">
+      <div class="ico-big">🛠️</div>
+      <h4>기술 지원</h4>
+      <p style="color:var(--muted); font-size:15px; line-height:1.5;">LISP 검토 · 수정 · 신규 제작 · 작동 이슈 분석</p>
+      <div class="l">담당자</div><div class="v">김수민 주임</div>
+      <div class="l">이메일</div><div class="v">smkim@bluetns.co.kr</div>
+      <div class="l">연락처</div><div class="v">010-5758-7580</div>
+      <div class="l">대응</div><div class="v">평일 09–18 영업일</div>
+    </div>
+    <div class="ch-card">
+      <div class="ico-big">📚</div>
+      <h4>교육 요청</h4>
+      <p style="color:var(--muted); font-size:15px; line-height:1.5;">신규 입사자 입문 · 심화 · 맞춤형 교육 가능</p>
+      <div class="l">유형</div><div class="v">입문 / 심화 / 맞춤형</div>
+      <div class="l">신청</div><div class="v">전담 매니저 통해</div>
+    </div>
+  </div>
+  <div class="feedback-box">
+    <div class="l">
+      <h4>💬 오늘 교육, 어떠셨나요?</h4>
+      <p>더 다루었으면 하는 주제, 부족했던 부분 — 편하게 알려주시면 다음 교육에 반영하겠습니다.</p>
+    </div>
+    <div class="qr-slot">QR<br/>FEEDBACK</div>
+  </div>
+  <div class="chrome-bot"><div class="wordmark"><span class="b"></span>BlueTNS</div><div class="pageno"><span class="num">25</span> / 26</div></div>
+</section>
+
+<!-- ============================ SLIDE 26 — closing ============================ -->
+<section class="s-end dark" data-screen-label="26 감사합니다">
+  <div class="grid-bg"></div>
+  <div class="accent-rail"></div>
+  <div class="chrome-top"><div class="section-tag" style="color:#fff;">CLOSING <span class="dot">·</span> Thank you</div><div class="mono">Q&A</div></div>
+  <div class="pad">
+    <div class="eyebrow" style="color:#FF6B35;">EA TRAINING · 2026</div>
+    <h1 style="margin-top:24px;">감사합니다.</h1>
+    <div class="accent-line"></div>
+    <div class="sub">질문 환영합니다.</div>
+  </div>
+  <div class="info-row">
+    <div class="wordmark" style="--logo-w:96px;"><img src="images/logo-white.png" alt="BlueTNS" style="height:26px;"/></div>
+    <div>강사 안병현 차장 · bhahn@bluetns.co.kr</div>
+  </div>
+</section>
+
+</deck-stage>
+    </div>
+  </div>
+
+  <div class="slides-bottombar">
+    <button class="nav-btn" id="prevBtn" onclick="navSlide(-1)">◀ 이전</button>
+    <button class="toc-btn" onclick="toggleTOC()">목차 ☰</button>
+    <button class="nav-btn" id="nextBtn" onclick="navSlide(1)">다음 ▶</button>
+  </div>
+</div>
+
+<!-- TOC drawer -->
+<div class="toc-drawer" id="tocDrawer">
+  <div class="toc-head">
+    <h3>목차 · 26장</h3>
+    <button class="toc-close" onclick="toggleTOC()">✕</button>
+  </div>
+  <div class="toc-list" id="tocList"></div>
+</div>
+
+
+<!-- ============================ COURSE B DETAIL ============================ -->
+<div class="view" id="course-b-detail">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo" onclick="showView('hub')"><img src="images/logo-color.png" alt="BlueTNS"/><span class="divider"></span><span class="sub">EA Training</span></div>
+      <nav class="topnav">
+        <a href="#" onclick="event.preventDefault(); showView('hub');">← 다른 코스 보기</a>
+        <a class="cta-mini" href="#" onclick="event.preventDefault(); enterSlidesB();" style="background:#4A6FA5;">교육 시작하기 ▶</a>
+      </nav>
+    </div>
+  </div>
+
+  <section class="detail-hero detail-hero-b">
+    <div class="detail-hero-inner">
+      <a class="back-link" href="#" onclick="event.preventDefault(); showView('hub');" style="color:#fff; background:rgba(255,255,255,0.12);">← 다른 코스 보기</a>
+      <div class="detail-emoji">📐</div>
+      <h1 style="color:#fff;">스탠다드 코스</h1>
+      <div class="formula" style="color:rgba(255,255,255,0.85);"><b style="color:#FF6B35;">30분</b> 셋팅 &nbsp;+&nbsp; <b style="color:#FF6B35;">2시간</b> 표준 협업 &nbsp;+&nbsp; <b style="color:#FF6B35;">30분</b> ZDREAM = <b style="color:#fff;">3시간</b></div>
+      <div class="detail-meta detail-meta-dark">
+        <div class="item"><div class="lbl">소요 시간</div><div class="val">3 hr</div></div>
+        <div class="item"><div class="lbl">슬라이드</div><div class="val">46 장</div></div>
+        <div class="item"><div class="lbl">권장 인원</div><div class="val">5–15명</div></div>
+        <div class="item"><div class="lbl">대상</div><div class="val">실무 1~3년차</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Learning goals -->
+  <section class="section">
+    <div class="section-eyebrow">LEARNING GOALS</div>
+    <h2>이 3시간 안에 가져가실 4가지.</h2>
+    <div class="goals-grid" style="grid-template-columns:repeat(2, 1fr);">
+      <div class="goal-card">
+        <div class="goal-num">GOAL 01</div>
+        <h3>셋팅을 30분 안에 끝냅니다</h3>
+        <p>자동저장·단축키·오스냅·보조도구·마이그레이션 — 신입도 한 페이지에 정리해 가져갑니다.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">GOAL 02</div>
+        <h3>협업 가능한 도면을 그립니다 ★</h3>
+        <p>DWT · 도곽 1:1 · 레이어 표준 · 문자/치수 공식 · 마감 5분 체크 — 발주처 반려 없는 도면.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">GOAL 03</div>
+        <h3>ZDREAM으로 시간을 법니다</h3>
+        <p>CIM · CEX · ETC · MPL — 100배 시간 단축. 종/횡단면 자동 작도, 폴더 단위 일괄 출력까지.</p>
+      </div>
+      <div class="goal-card">
+        <div class="goal-num">GOAL 04</div>
+        <h3>막힐 때 어디로 연락할지 압니다</h3>
+        <p>BlueTNS LISP 검토·신규 제작 · 무료 서드파티 도구의 안전한 활용 가이드.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Persona -->
+  <section class="section persona-section" style="background:#F2F5F9;">
+    <div class="section-eyebrow">FOR YOU</div>
+    <h2>이런 분께 추천합니다.</h2>
+    <div class="persona-grid">
+      <div class="persona-card">
+        <div class="persona-emoji">📋</div>
+        <h4>실무 1~3년차</h4>
+        <div class="who">"기본은 되는데, 발주처 반려를 자주 받는 분"</div>
+        <div class="why">표준의 존재 이유를 배우고, 본인 도면에 즉시 적용 가능합니다.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">👥</div>
+        <h4>팀 단위 협업자</h4>
+        <div class="who">"동료와 도면을 주고받을 때마다 충돌이 나는 분"</div>
+        <div class="why">DWT·레이어·블록 명명 등 협업 표준을 한 번에 정리.</div>
+      </div>
+      <div class="persona-card">
+        <div class="persona-emoji">⚡</div>
+        <h4>자동화 갈증</h4>
+        <div class="who">"반복 작업에 지쳤지만 LISP은 어려워 보였던 분"</div>
+        <div class="why">ZDREAM 무료 자동화로 시간을 100배 줄이는 법.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline -->
+  <section class="section">
+    <div class="section-eyebrow">TIMELINE</div>
+    <h2>시간 배분, 한눈에.</h2>
+    <div class="timeline-viz">
+      <div class="timeline-bar" style="grid-template-columns: 0.5fr 2fr 0.2fr 1fr;">
+        <div class="tl-seg p1" style="background:linear-gradient(135deg, #E8A87C, #F4EFE7); color:#1E2A3A;"><div class="lbl">PART 1 · 30분</div><div class="ttl">셋팅</div></div>
+        <div class="tl-seg p1" style="background:linear-gradient(135deg, #4A6FA5, #1E2A3A); color:#fff;"><div class="lbl" style="color:rgba(255,255,255,0.85);">PART 2 · 2시간 ★</div><div class="ttl" style="color:#fff;">2D 도면 표준 · 협업의 약속</div></div>
+        <div class="tl-seg brk"><div class="ttl">☕</div><div class="lbl" style="color:#1E2A3A; opacity:0.6;">15min</div></div>
+        <div class="tl-seg p2"><div class="lbl">PART 3 · 50분</div><div class="ttl">ZDREAM 자동화</div></div>
+      </div>
+      <div class="timeline-axis">
+        <div><span>0</span><span>30분</span></div>
+        <div><span>2시간 30분</span></div>
+        <div><span>~</span></div>
+        <div><span>3시간</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curriculum preview -->
+  <section class="section curr-section">
+    <div class="section-eyebrow">CURRICULUM</div>
+    <h2>46장의 슬라이드, 핵심 흐름.</h2>
+    <p class="sub">표준 협업(Part 2)이 가장 핵심 — 발주처 반려를 90% 줄이는 약속들.</p>
+
+    <div class="curr-list">
+      <div class="curr-group">
+        <div class="curr-group-head">
+          <span class="gnum">PART 1</span>
+          <span class="gttl">오늘부터 바뀌는 ZWCAD 셋팅</span>
+          <span class="gtime">30 min · 11장</span>
+        </div>
+        <div class="curr-items">
+          <div class="curr-item" data-slide="1"><span class="num">01</span><span class="ttl">표지 · 오늘의 흐름 · BlueTNS 인사</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="6"><span class="num">02</span><span class="ttl">옵션 5종 — 자동저장 · 백업 · 색상 · MOVEBAK · ZIP</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="8"><span class="num">03</span><span class="ttl">.pgp 단축키 · ALIASEDIT</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="10"><span class="num">04</span><span class="ttl">오스냅 3개 권장 · F10/F11/F12 OFF</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="12"><span class="num">05</span><span class="ttl">사용자 설정 마이그레이션</span><span class="arrow">→</span></div>
+        </div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head" style="background:linear-gradient(90deg, #4A6FA5, #1E2A3A); color:#fff;">
+          <span class="gnum" style="background:rgba(255,107,53,0.25); color:#fff;">PART 2 ★</span>
+          <span class="gttl">2D 도면 작성 표준 — 협업의 약속</span>
+          <span class="gtime">2시간 · 17장</span>
+        </div>
+        <div class="curr-items">
+          <div class="curr-item" data-slide="15"><span class="num">06</span><span class="ttl"><span class="star">★</span>DWT 템플릿 · 도곽 1:1 작성</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="17"><span class="num">07</span><span class="ttl">LTSCALE / DIMSCALE · 레이아웃 활용</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="19"><span class="num">08</span><span class="ttl">선택 옵션 6종 · LINE / PLINE 구분</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="21"><span class="num">09</span><span class="ttl">선 겹침 금지 (OVERKILL)</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="22"><span class="num">10</span><span class="ttl"><span class="star">★</span>레이어 표준 (KS F1542)</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="24"><span class="num">11</span><span class="ttl">문자 크기 공식 (3 × N) · 치수 표준</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="26"><span class="num">12</span><span class="ttl">특수문자 치트시트 · SHX vs TTF</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="27"><span class="num">13</span><span class="ttl">블록 명명 규칙 · 원점 작업 · 파일명</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="29"><span class="num">14</span><span class="ttl"><span class="star">★</span>마감 5분 체크리스트</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="30"><span class="num">15</span><span class="ttl">DWG to PDF · PDF 레이어 살리기 · PDFIMPORT</span><span class="arrow">→</span></div>
+        </div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head brk">
+          <span class="gnum">BREAK</span>
+          <span class="gttl">☕ 휴식</span>
+          <span class="gtime">15 min</span>
+        </div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head">
+          <span class="gnum">PART 3</span>
+          <span class="gttl">ZDREAM이 대신해주는 반복 작업</span>
+          <span class="gtime">50 min · 12장</span>
+        </div>
+        <div class="curr-items">
+          <div class="curr-item" data-slide="33"><span class="num">16</span><span class="ttl">CIM — 엑셀 좌표 → 도면 자동 입력</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="34"><span class="num">17</span><span class="ttl">CIM 응용 — 종 / 횡단면 자동 작도</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="36"><span class="num">18</span><span class="ttl">CEX — 도면 좌표 → 엑셀 출력</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="38"><span class="num">19</span><span class="ttl"><span class="star">★</span>MPL — 폴더 단위 일괄 출력 (100배 단축)</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="40"><span class="num">20</span><span class="ttl">ETC — 양방향 엑셀 ↔ CAD 연동</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="41"><span class="num">21</span><span class="ttl">작도 효율 도구 8선</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="43"><span class="num">22</span><span class="ttl">LISP, 막히면 BlueTNS · 무료 서드파티 가이드</span><span class="arrow">→</span></div>
+        </div>
+      </div>
+      <div class="curr-group">
+        <div class="curr-group-head">
+          <span class="gnum">CLOSING</span>
+          <span class="gttl">마무리 · 지원 채널</span>
+          <span class="gtime">10 min · 3장</span>
+        </div>
+        <div class="curr-items">
+          <div class="curr-item" data-slide="44"><span class="num">23</span><span class="ttl">오늘 배운 것 한눈에</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="45"><span class="num">24</span><span class="ttl">지원 채널 · 전담 매니저</span><span class="arrow">→</span></div>
+          <div class="curr-item" data-slide="46"><span class="num">25</span><span class="ttl">감사합니다</span><span class="arrow">→</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main CTA -->
+  <section class="cta-section">
+    <a class="start-btn" href="#" onclick="event.preventDefault(); enterSlidesB();" style="background:linear-gradient(135deg, #1E2A3A, #4A6FA5);">
+      <div class="play">▶</div>
+      <div class="body">
+        <div class="t1">교육 시작하기</div>
+        <div class="t2">총 46장 / 약 3시간 · 키보드 ←/→로 넘기실 수 있어요</div>
+      </div>
+    </a>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div>
+        <div class="logo"><img src="images/logo-white.png" alt="BlueTNS" style="height:38px;"/></div>
+        <div class="footer-quote" style="margin-top:18px;">"표준은 제약이 아니라, 협업의 약속입니다"</div>
+      </div>
+      <div>
+        <h5>빠른 링크</h5>
+        <ul class="footer-list">
+          <li><a href="#" onclick="event.preventDefault(); showView('hub');">← 허브로 돌아가기</a></li>
+          <li><a href="#" onclick="event.preventDefault(); openContact();">전담 매니저 문의</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>이 코스 정보</h5>
+        <ul class="footer-list">
+          <li>총 46장 · 3시간</li>
+          <li>5명 이상 방문 진행</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 BlueTNS. All rights reserved.</div>
+      <div>Course B · 스탠다드</div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================ COURSE C DETAIL ============================ -->
+<div class="view" id="course-c-detail">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="#" onclick="event.preventDefault(); showView('hub');"><span>BlueTNS · ZWCAD EA 총판</span></a>
+      <nav class="topnav">
+        <a href="#" onclick="event.preventDefault(); showView('hub');">← 다른 코스 보기</a>
+        <a class="cta-mini" href="#" onclick="event.preventDefault(); enterSlidesC();" style="background:linear-gradient(135deg,#FF6B35,#FFA77F);">교육 시작하기 ▶</a>
+      </nav>
+    </div>
+  </div>
+  <section style="max-width:1280px; margin:0 auto; padding:120px 60px 80px;">
+    <div style="font-size:13px; letter-spacing:0.18em; color:#FF6B35; font-weight:700;">★ MASTER · 6~7시간 / 86장</div>
+    <h1 style="font-size:84px; line-height:0.95; letter-spacing:-0.03em; margin:18px 0 24px; color:#1E2A3A;">실무자 →<br/><span style="color:#FF6B35;">표준화 추진자</span></h1>
+    <p style="font-size:22px; color:#5a6470; line-height:1.5; max-width:820px;">손으로 익히고 조직에 전파하는 ZWCAD 풀데이 코스. 실습 3회 + 표준화 컨설팅 + LISP 심화까지.</p>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:48px;">
+      <div style="padding:28px; background:#fff; border:1px solid #e8ecef; border-radius:14px;"><div style="font-size:13px; color:#FF6B35; font-weight:700; letter-spacing:0.1em;">SESSION 1-2</div><div style="margin-top:6px; font-size:18px; color:#1E2A3A; font-weight:600;">셋팅 + 2D 표준 + 실습 ①</div></div>
+      <div style="padding:28px; background:#fff; border:1px solid #e8ecef; border-radius:14px;"><div style="font-size:13px; color:#FF6B35; font-weight:700; letter-spacing:0.1em;">SESSION 3-4</div><div style="margin-top:6px; font-size:18px; color:#1E2A3A; font-weight:600;">실습 ② 도면 + 실습 ③ ZDREAM</div></div>
+      <div style="padding:28px; background:linear-gradient(135deg,#1E2A3A,#4A6FA5); color:#fff; border-radius:14px;"><div style="font-size:13px; color:#FFA77F; font-weight:700; letter-spacing:0.1em;">SESSION 5 ★</div><div style="margin-top:6px; font-size:18px; font-weight:600;">표준화 + LISP 심화</div></div>
+    </div>
+
+    <!-- Curriculum -->
+    <div style="margin-top:80px;">
+      <div class="section-eyebrow">CURRICULUM</div>
+      <h2 style="font-size:48px; margin-top:8px;">86장의 슬라이드, 5개 세션.</h2>
+      <p class="sub" style="margin-top:8px;">항목을 클릭하면 해당 슬라이드부터 시작할 수 있어요.</p>
+
+      <div class="curr-list" style="margin-top:32px;">
+        <div class="curr-group">
+          <div class="curr-group-head"><span class="gnum">SESSION 1</span><span class="gttl">오프닝 + 셋팅 + 실습 ①</span><span class="gtime">90 min · 15장</span></div>
+          <div class="curr-items">
+            <div class="curr-item" data-slide="1"><span class="num">01</span><span class="ttl">표지 · 목차 · BlueTNS 인사</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="5"><span class="num">02</span><span class="ttl">인터페이스 · 5대 옵션 (자동저장 / 백업 / 색상 / MOVEBAK / ZIP)</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="10"><span class="num">03</span><span class="ttl">.pgp 단축키 · 오스냅 3개 · F10/F11/F12</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="13"><span class="num">04</span><span class="ttl"><span class="star">★</span>실습 ① — 셋팅 5단계 직접 손으로</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head" style="background:linear-gradient(90deg,#1E2A3A,#4A6FA5); color:#fff;"><span class="gnum" style="background:rgba(255,107,53,0.3); color:#fff;">SESSION 2 ★</span><span class="gttl">2D 도면 작성 표준 — 발주처 반려 90% 줄이는 약속</span><span class="gtime">2시간 · 28장</span></div>
+          <div class="curr-items">
+            <div class="curr-item" data-slide="17"><span class="num">05</span><span class="ttl"><span class="star">★</span>DWT 템플릿 · 도곽 1:1 작성</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="20"><span class="num">06</span><span class="ttl">LTSCALE / DIMSCALE · 레이아웃 활용</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="24"><span class="num">07</span><span class="ttl">선택 옵션 6종 · OVERKILL · LINE / PLINE</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="27"><span class="num">08</span><span class="ttl"><span class="star">★</span>레이어 표준 (KS F1542)</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="30"><span class="num">09</span><span class="ttl">문자 크기 (3 × N) · 치수 · 특수문자 · SHX/TTF</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="35"><span class="num">10</span><span class="ttl">블록 명명 · 원점 작업 · 파일명 규칙</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="37"><span class="num">11</span><span class="ttl"><span class="star">★</span>마감 5분 체크리스트 · DWG to PDF</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head"><span class="gnum">SESSION 3</span><span class="gttl">실습 ② — 도면 작성 표준 적용</span><span class="gtime">90 min · 5장</span></div>
+          <div class="curr-items">
+            <div class="curr-item" data-slide="44"><span class="num">12</span><span class="ttl"><span class="star">★</span>실습 ② — 도곽부터 출력까지 한 도면</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head brk"><span class="gnum">LUNCH</span><span class="gttl">🍱 점심</span><span class="gtime">60 min</span></div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head"><span class="gnum">SESSION 4</span><span class="gttl">ZDREAM — 반복 작업 자동화 + 실습 ③</span><span class="gtime">2시간 · 18장</span></div>
+          <div class="curr-items">
+            <div class="curr-item" data-slide="50"><span class="num">13</span><span class="ttl">ZDREAM 개요 — 왜 LISP인가</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="51"><span class="num">14</span><span class="ttl">CIM — 엑셀 좌표 → 도면 자동 입력</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="54"><span class="num">15</span><span class="ttl">CEX — 도면 좌표 → 엑셀 출력</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="56"><span class="num">16</span><span class="ttl"><span class="star">★</span>MPL — 폴더 단위 일괄 출력 (100배 단축)</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="59"><span class="num">17</span><span class="ttl">ETC · 작도 효율 도구 8선 · LISP 가이드</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="66"><span class="num">18</span><span class="ttl"><span class="star">★</span>실습 ③ — ZDREAM 명령 직접 사용</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head brk"><span class="gnum">BREAK</span><span class="gttl">☕ 휴식</span><span class="gtime">15 min</span></div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head" style="background:linear-gradient(90deg,#FF6B35,#FFA77F); color:#fff;"><span class="gnum" style="background:rgba(0,0,0,0.2); color:#fff;">SESSION 5 ★</span><span class="gttl">조직에 전파 — 표준화 + LISP 심화</span><span class="gtime">90 min · 12장</span></div>
+          <div class="curr-items">
+            <div class="curr-item" data-slide="68"><span class="num">19</span><span class="ttl"><span class="star">★</span>사내 CAD 표준화 — 누가 어떻게 시작하나</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="71"><span class="num">20</span><span class="ttl">DWT · 레이어 · 블록 라이브러리 운영</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="74"><span class="num">21</span><span class="ttl">LISP 심화 — 자동화 적용 · 검토 · 신규 제작</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="77"><span class="num">22</span><span class="ttl">서드파티 도구 큐레이션 · 라이선스 관리</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+        <div class="curr-group">
+          <div class="curr-group-head"><span class="gnum">CLOSING</span><span class="gttl">마무리 · 지원 채널</span><span class="gtime">15 min · 7장</span></div>
+          <div class="curr-items">
+            <div class="curr-item" data-slide="80"><span class="num">23</span><span class="ttl">오늘 배운 것 한눈에</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="83"><span class="num">24</span><span class="ttl">지원 채널 · 전담 매니저</span><span class="arrow">→</span></div>
+            <div class="curr-item" data-slide="86"><span class="num">25</span><span class="ttl">감사합니다</span><span class="arrow">→</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:48px; text-align:center;">
+      <a class="start-btn" href="#" onclick="event.preventDefault(); enterSlidesC();" style="background:linear-gradient(135deg,#FF6B35,#FFA77F); display:inline-flex; align-items:center; gap:18px; padding:20px 36px; border-radius:99px; color:#fff; font-size:18px; font-weight:600;"><span class="play" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.25);display:flex;align-items:center;justify-content:center;">▶</span><span>마스터 코스 시작 — 86장</span></a>
+    </div>
+  </section>
+</div>
+
+<!-- ============================ COURSE C SLIDES (iframe wrapper) ============================ -->
+<div class="view" id="course-c-slides">
+  <div class="slides-topbar">
+    <button class="back" onclick="exitSlidesC()">← 코스 개요로</button>
+    <div class="progress-track"><div class="progress-fill" id="progressFillC"></div></div>
+    <button class="back" onclick="toggleSlideFullscreenC()" title="전체화면 (F)" style="margin-right:12px;">⛶ 전체화면</button>
+    <div style="color:#fff; font-family:'JetBrains Mono',monospace; font-size:13px; opacity:0.7;"><span id="curNumC">1</span> / 86</div>
+  </div>
+  <div class="slides-stage" style="padding:0;">
+    <iframe id="masterFrame" src="about:blank" style="width:100%; height:100%; border:0; background:#0b0d10;" allowfullscreen tabindex="0"></iframe>
+  </div>
+  <div class="slides-bottombar">
+    <button class="nav-btn" id="prevBtnC" onclick="navSlideC(-1)">◀ 이전</button>
+    <button class="toc-btn" onclick="toggleTOCC()">목차 ☰</button>
+    <button class="nav-btn" id="nextBtnC" onclick="navSlideC(1)">다음 ▶</button>
+  </div>
+</div>
+
+<!-- ============================ COURSE B SLIDES (iframe wrapper) ============================ -->
+<div class="view" id="course-b-slides">
+  <div class="slides-topbar">
+    <button class="back" onclick="exitSlidesB()">← 코스 개요로</button>
+    <div class="progress-track"><div class="progress-fill" id="progressFillB"></div></div>
+    <button class="back" onclick="toggleSlideFullscreenB()" title="전체화면 (F)" style="margin-right:12px;">⛶ 전체화면</button>
+    <div class="counter"><span class="num" id="curNumB">1</span> / 46</div>
+  </div>
+  <div class="slides-stage" style="padding:0;">
+    <iframe id="stdFrame" src="about:blank" style="width:100%; height:100%; border:0; background:#0b0d10;" allowfullscreen tabindex="0"></iframe>
+  </div>
+
+  <div class="slides-bottombar">
+    <button class="nav-btn" id="prevBtnB" onclick="navSlideB(-1)">◀ 이전</button>
+    <button class="toc-btn" onclick="toggleTOCB()">목차 ☰</button>
+    <button class="nav-btn" id="nextBtnB" onclick="navSlideB(1)">다음 ▶</button>
+  </div>
+</div>
+
+<!-- Coming soon modal -->
+<div class="modal-backdrop" id="comingModal" onclick="if(event.target===this)closeComing()">
+  <div class="modal">
+    <div class="em" id="comingEm">📐</div>
+    <h3 id="comingTitle">곧 만나보실 수 있습니다</h3>
+    <p id="comingBody">스탠다드 코스는 준비 중입니다. 조기 신청을 원하시면 전담 매니저에게 문의해 주세요.</p>
+    <div class="acts">
+      <button class="btn-prim" onclick="closeComing(); openContact();">전담 매니저에게 문의하기</button>
+      <button class="btn-sec" onclick="closeComing()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- Contact modal -->
+<div class="modal-backdrop" id="contactModal" onclick="if(event.target===this)closeContact()">
+  <div class="modal">
+    <div class="em">📞</div>
+    <h3>전담 매니저에게 문의</h3>
+    <p>담당자 · 안병현 차장<br/>이메일 · <a href="mailto:bhahn@bluetns.co.kr" style="color:var(--accent); text-decoration:none;">bhahn@bluetns.co.kr</a><br/>연락처 · 010-6437-4963<br/>평일 09:00 – 18:00 영업일 응답</p>
+    <div class="acts">
+      <button class="btn-sec" onclick="closeContact()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ Slide metadata ============
+const SLIDES = [
+  {n:1,  group:'open', title:'표지 · ZWCAD 첫걸음'},
+  {n:2,  group:'open', title:'오늘의 흐름'},
+  {n:3,  group:'open', title:'BlueTNS 인사'},
+  {n:4,  group:'p1',   title:'PART 1 시작'},
+  {n:5,  group:'p1',   title:'인터페이스 빠른 정복'},
+  {n:6,  group:'p1',   title:'5대 옵션 인트로'},
+  {n:7,  group:'p1',   title:'5대 옵션 ①②③ — 자동저장·백업·저장'},
+  {n:8,  group:'p1',   title:'5대 옵션 ④⑤ — 색상·MOVEBAK'},
+  {n:9,  group:'p1',   title:'단축키 — 한 번만 잡으면 평생'},
+  {n:10, group:'p1',   title:'객체 스냅 — 적게 켤수록 정확'},
+  {n:11, group:'p1',   title:'보조도구 끄기 (F10/F11/F12)'},
+  {n:12, group:'p1',   title:'설정 마이그레이션'},
+  {n:13, group:'p1',   title:'PART 1 요약'},
+  {n:14, group:'brk',  title:'☕ 브런치 휴식'},
+  {n:15, group:'p2',   title:'PART 2 시작'},
+  {n:16, group:'p2',   title:'ZDREAM이란?'},
+  {n:17, group:'p2',   title:'좌표 다루기 인트로'},
+  {n:18, group:'p2',   title:'CIM — 엑셀 → 도면', star:true},
+  {n:19, group:'p2',   title:'CEX — 도면 → 엑셀', star:true},
+  {n:20, group:'p2',   title:'MPL — 다중 출력', star:true},
+  {n:21, group:'p2',   title:'ETC — 엑셀 ↔ CAD', star:true},
+  {n:22, group:'p2',   title:'작도 효율 도구'},
+  {n:23, group:'p2',   title:'LISP & BlueTNS 지원'},
+  {n:24, group:'cl',   title:'오늘 배운 것 한눈에'},
+  {n:25, group:'cl',   title:'지원 채널'},
+  {n:26, group:'cl',   title:'감사합니다'},
+];
+const TOTAL = 26;
+let current = 1;
+
+// ============ View switching ============
+function showView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ============ Coming Soon ============
+function openComing(which) {
+  const modal = document.getElementById('comingModal');
+  if (which === 'B') {
+    document.getElementById('comingEm').textContent = '📐';
+    document.getElementById('comingTitle').textContent = '스탠다드 코스 — 곧 만나보실 수 있습니다';
+    document.getElementById('comingBody').textContent = '스탠다드 코스(3시간 / 반나절)에서는 브런치 코스 내용에 2D 도면 작성 표준 — 도곽 블록, 레이어/문자 표준 — 을 추가로 다룹니다. 조기 신청을 원하시면 전담 매니저에게 문의해 주세요.';
+  } else {
+    document.getElementById('comingEm').textContent = '🏗️';
+    document.getElementById('comingTitle').textContent = '마스터 코스 — 곧 만나보실 수 있습니다';
+    document.getElementById('comingBody').textContent = '마스터 코스(풀데이)는 LISP 심화 활용과 회사 표준 컨설팅까지 포함하는 조직 단위 프로그램입니다. 조기 신청을 원하시면 전담 매니저에게 문의해 주세요.';
+  }
+  modal.classList.add('open');
+}
+function closeComing() { document.getElementById('comingModal').classList.remove('open'); }
+function openContact() { document.getElementById('contactModal').classList.add('open'); }
+function closeContact() { document.getElementById('contactModal').classList.remove('open'); }
+
+// ============ Curriculum render ============
+function renderCurriculum() {
+  const groups = { p1:'curr-p1', brk:'curr-brk', p2:'curr-p2', cl:'curr-cl' };
+  const containers = {};
+  for (const k in groups) containers[k] = document.getElementById(groups[k]);
+  // include opening into p1 group? We'll prepend opening to p1.
+  SLIDES.forEach(s => {
+    let target = containers[s.group];
+    if (s.group === 'open') target = containers['p1']; // bundle opening with p1 visually
+    if (!target) return;
+    const item = document.createElement('div');
+    item.className = 'curr-item';
+    item.innerHTML = `<div class="num">${String(s.n).padStart(2,'0')}</div><div class="ttl">${s.star?'<span class="star">★</span>':''}${s.title}</div><div class="arrow">→</div>`;
+    item.onclick = () => { current = s.n; enterSlides(); };
+    target.appendChild(item);
+  });
+}
+
+// ============ TOC ============
+function renderTOC() {
+  const list = document.getElementById('tocList');
+  list.innerHTML = '';
+  const groupNames = { open:'OPENING', p1:'PART 1 — ZWCAD 셋팅', brk:'BREAK', p2:'PART 2 — ZDREAM', cl:'CLOSING' };
+  let lastGroup = null;
+  SLIDES.forEach(s => {
+    if (s.group !== lastGroup) {
+      const head = document.createElement('div');
+      head.className = 'toc-section-head';
+      head.textContent = groupNames[s.group];
+      list.appendChild(head);
+      lastGroup = s.group;
+    }
+    const item = document.createElement('div');
+    item.className = 'toc-item' + (s.n === current ? ' current' : '');
+    item.dataset.n = s.n;
+    item.innerHTML = `<div class="num">${String(s.n).padStart(2,'0')}</div><div class="ttl">${s.star?'<span style="color:var(--accent); margin-right:6px;">★</span>':''}${s.title}</div>`;
+    item.onclick = () => { goSlide(s.n); toggleTOC(); };
+    list.appendChild(item);
+  });
+}
+function toggleTOC() { document.getElementById('tocDrawer').classList.toggle('open'); }
+
+// ============ Slide control ============
+function enterSlides() {
+  showView('course-a-slides');
+  const el = document.getElementById('course-a-slides');
+  el.classList.add('chrome-visible');
+  setTimeout(() => el.classList.remove('chrome-visible'), 2200);
+  setTimeout(() => { fitFrame(); waitForDeckReady().then(() => goSlide(current)); }, 50);
+}
+function waitForDeckReady() {
+  return new Promise((resolve) => {
+    const tryGet = () => {
+      const ds = document.querySelector('#course-a-slides deck-stage');
+      if (ds && typeof ds.goTo === 'function') { resolve(ds); return; }
+      setTimeout(tryGet, 60);
+    };
+    tryGet();
+  });
+}
+function getDeck() { return document.querySelector('#course-a-slides deck-stage'); }
+function exitSlides() { showView('course-a-detail'); }
+
+function goSlide(n) {
+  if (n < 1) n = 1; if (n > TOTAL) n = TOTAL;
+  current = n;
+  const ds = getDeck();
+  if (ds && typeof ds.goTo === 'function') ds.goTo(n - 1);
+  document.getElementById('curNum').textContent = n;
+  document.getElementById('progressFill').style.width = (n/TOTAL*100) + '%';
+  document.getElementById('prevBtn').disabled = (n === 1);
+  document.getElementById('nextBtn').disabled = (n === TOTAL);
+  // update toc current
+  document.querySelectorAll('.toc-item').forEach(el => {
+    el.classList.toggle('current', parseInt(el.dataset.n) === n);
+  });
+}
+function navSlide(d) { goSlide(current + d); }
+
+function toggleSlideFullscreen() {
+  const el = document.getElementById('course-a-slides');
+  const isFs = document.fullscreenElement || document.webkitFullscreenElement;
+  if (!isFs) {
+    const req = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (req) {
+      const p = req.call(el);
+      if (p && p.catch) p.catch((err) => {
+        console.warn('fullscreen blocked:', err && err.message);
+        // Fallback: emulate fullscreen via CSS class
+        el.classList.add('emulated-fs');
+      });
+    } else {
+      el.classList.add('emulated-fs');
+    }
+  } else {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (exit) exit.call(document);
+    el.classList.remove('emulated-fs');
+  }
+}
+
+function fitFrame() {
+  const frame = document.querySelector('#course-a-slides .slide-frame');
+  if (!frame) return;
+  const w = frame.clientWidth;
+  const scale = w / 1920;
+  frame.style.setProperty('--sf', scale);
+}
+window.addEventListener('resize', () => { if (document.getElementById('course-a-slides').classList.contains('active')) fitFrame(); });
+
+// keyboard
+document.addEventListener('keydown', (e) => {
+  const slidesActive = document.getElementById('course-a-slides').classList.contains('active');
+  if (!slidesActive) return;
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); navSlide(1); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); navSlide(-1); }
+  else if (e.key === 'Escape') exitSlides();
+  else if (e.key === 't' || e.key === 'T') toggleTOC();
+  else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleSlideFullscreen(); }
+});
+
+// init
+renderCurriculum();
+renderTOC();
+
+// Wire up Course B / C curriculum click → jump to slide
+document.querySelectorAll('#course-b-detail .curr-item[data-slide]').forEach(el => {
+  el.addEventListener('click', () => {
+    const n = parseInt(el.dataset.slide, 10);
+    if (n) enterSlidesB(n);
+  });
+});
+document.querySelectorAll('#course-c-detail .curr-item[data-slide]').forEach(el => {
+  el.addEventListener('click', () => {
+    const n = parseInt(el.dataset.slide, 10);
+    if (n) enterSlidesC(n);
+  });
+});
+
+// listen for slide changes from inside iframe (deck-stage posts slideIndexChanged)
+window.addEventListener('message', (e) => {
+  if (e.data && typeof e.data.slideIndexChanged === 'number') {
+    const n = e.data.slideIndexChanged + 1;
+    if (n !== current) { current = n; goSlide(n); }
+  }
+});
+
+// ============ Course B (Standard) slide control ============
+let currentB = 1;
+const TOTAL_B = 46;
+function getDeckB() {
+  const f = document.getElementById('stdFrame');
+  try { return f.contentDocument?.querySelector('deck-stage'); } catch(e) { return null; }
+}
+function enterSlidesB(slideN) {
+  showView('course-b-slides');
+  const f = document.getElementById('stdFrame');
+  if (!f.dataset.loaded) {
+    f.src = 'std.html';
+    f.dataset.loaded = '1';
+  }
+  document.getElementById('course-b-slides').classList.add('chrome-visible');
+  setTimeout(() => {
+    document.getElementById('course-b-slides').classList.remove('chrome-visible');
+    try { f.contentWindow?.focus(); } catch(e){}
+  }, 1800);
+  if (slideN && slideN > 1) jumpToSlideWhenReady(getDeckB, slideN);
+}
+function jumpToSlideWhenReady(getter, n, attempts) {
+  attempts = attempts || 0;
+  const ds = getter();
+  if (ds && typeof ds.goTo === 'function') { try { ds.goTo(n - 1); } catch(e){} return; }
+  if (attempts > 60) return;
+  setTimeout(() => jumpToSlideWhenReady(getter, n, attempts + 1), 100);
+}
+function exitSlidesB() { showView('course-b-detail'); }
+function navSlideB(dir) {
+  const ds = getDeckB();
+  if (!ds) return;
+  if (dir > 0) ds.next(); else ds.prev();
+}
+function toggleTOCB() {
+  const ds = getDeckB();
+  if (!ds) return;
+  // deck-stage rail toggle — try clicking its built-in count chip if present, else jump to slide picker
+  try {
+    const rail = ds.shadowRoot?.querySelector('.rail-toggle, [data-rail-toggle]');
+    if (rail) rail.click();
+    else ds.contentWindow?.dispatchEvent?.(new KeyboardEvent('keydown', { key: 't' }));
+  } catch(e){}
+}
+function toggleSlideFullscreenB() {
+  const view = document.getElementById('course-b-slides');
+  if (view.classList.toggle('fullscreen-emulated')) {
+    document.documentElement.requestFullscreen?.().catch(()=>{});
+  } else {
+    if (document.fullscreenElement) document.exitFullscreen?.();
+  }
+}
+// Forward keyboard navigation to iframe deck-stage when course B is active
+document.addEventListener('keydown', (e) => {
+  const view = document.getElementById('course-b-slides');
+  if (!view.classList.contains('active')) return;
+  if (e.key === 'Escape') { exitSlidesB(); return; }
+  if (e.key === 'f' || e.key === 'F') { toggleSlideFullscreenB(); return; }
+  if (['ArrowRight','ArrowLeft','PageUp','PageDown',' ','Spacebar','Home','End'].includes(e.key)) {
+    const ds = getDeckB();
+    if (!ds) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Spacebar') ds.next();
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') ds.prev();
+    else if (e.key === 'Home') ds.goTo(0);
+    else if (e.key === 'End') ds.goTo(TOTAL_B - 1);
+    e.preventDefault();
+  }
+});
+// listen for slide changes from std iframe
+window.addEventListener('message', (e) => {
+  if (e.data && typeof e.data.slideIndexChanged === 'number') {
+    if (document.getElementById('course-b-slides').classList.contains('active')) {
+      const num = e.data.slideIndexChanged + 1;
+      currentB = num;
+      document.getElementById('curNumB').textContent = num;
+      document.getElementById('progressFillB').style.width = (num / TOTAL_B * 100) + '%';
+      document.getElementById('prevBtnB').disabled = (num === 1);
+      document.getElementById('nextBtnB').disabled = (num === TOTAL_B);
+    }
+    if (document.getElementById('course-c-slides').classList.contains('active')) {
+      const num = e.data.slideIndexChanged + 1;
+      currentC = num;
+      document.getElementById('curNumC').textContent = num;
+      document.getElementById('progressFillC').style.width = (num / TOTAL_C * 100) + '%';
+      document.getElementById('prevBtnC').disabled = (num === 1);
+      document.getElementById('nextBtnC').disabled = (num === TOTAL_C);
+    }
+  }
+});
+
+// ============ Course C (Master) slide control ============
+let currentC = 1;
+const TOTAL_C = 86;
+function getDeckC() {
+  const f = document.getElementById('masterFrame');
+  try { return f.contentDocument?.querySelector('deck-stage'); } catch(e) { return null; }
+}
+function enterSlidesC(slideN) {
+  showView('course-c-slides');
+  const f = document.getElementById('masterFrame');
+  if (!f.dataset.loaded) { f.src = 'master.html'; f.dataset.loaded = '1'; }
+  document.getElementById('course-c-slides').classList.add('chrome-visible');
+  setTimeout(() => {
+    document.getElementById('course-c-slides').classList.remove('chrome-visible');
+    try { f.contentWindow?.focus(); } catch(e){}
+  }, 1800);
+  if (slideN && slideN > 1) jumpToSlideWhenReady(getDeckC, slideN);
+}
+function exitSlidesC() { showView('course-c-detail'); }
+function navSlideC(dir) { const ds = getDeckC(); if (!ds) return; if (dir>0) ds.next(); else ds.prev(); }
+function toggleTOCC() { const ds = getDeckC(); if (!ds) return; try { const rail = ds.shadowRoot?.querySelector('.rail-toggle, [data-rail-toggle]'); if (rail) rail.click(); } catch(e){} }
+function toggleSlideFullscreenC() {
+  const view = document.getElementById('course-c-slides');
+  if (view.classList.toggle('fullscreen-emulated')) { document.documentElement.requestFullscreen?.().catch(()=>{}); }
+  else { if (document.fullscreenElement) document.exitFullscreen?.(); }
+}
+document.addEventListener('keydown', (e) => {
+  const view = document.getElementById('course-c-slides');
+  if (!view.classList.contains('active')) return;
+  if (e.key === 'Escape') { exitSlidesC(); return; }
+  if (e.key === 'f' || e.key === 'F') { toggleSlideFullscreenC(); return; }
+  if (['ArrowRight','ArrowLeft','PageUp','PageDown',' ','Spacebar','Home','End'].includes(e.key)) {
+    const ds = getDeckC(); if (!ds) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Spacebar') ds.next();
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') ds.prev();
+    else if (e.key === 'Home') ds.goTo(0);
+    else if (e.key === 'End') ds.goTo(TOTAL_C - 1);
+    e.preventDefault();
+  }
+});
+
+</script>
+
+</body>
+</html>
